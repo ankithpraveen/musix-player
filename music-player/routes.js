@@ -7,6 +7,8 @@ module.exports.paths = app => {
     app.get('/playSong', controller.loadPlay);
     app.post('/uploadSong', controller.uploadFile);
     app.post('/getSong', controller.getFile);
-    
-    
+
+
 }
+
+//test
