@@ -25,9 +25,9 @@ passport.use(new GoogleStrategy({
 ));
 
 
-module.exports.passini = app => {    
+module.exports.passini = app => {
     app.use(passport.initialize());
-    app.use(passport.session());   
+    app.use(passport.session());
 }
 
 
