@@ -37,6 +37,19 @@ module.exports.loadHome = (req, res) => {
 };
 
 module.exports.loadPlay = (req, res) => {
+    // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+    //     if (err) {
+    //         console.log(err);
+    //     }
+    //     const db = client.db(dbName);
+    //     //finding user's playlists 
+    //     var query={email:req.user.email}
+    //     db.collection("allplaylists").find(query).toArray( function (err, res) {
+    //         if (err) {
+    //             console.log(err);
+    //         }
+    //     });
+    // });
     res.render('psong', {});
 };
 
@@ -98,3 +111,18 @@ module.exports.getFile = (req, res) => {
         readstream.pipe(res);
     });
 };
+
+
+ // songdetails = {email: "email", plname: "playlist1", song_name: document.getElementById('sname').value} //add email
+    // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+    //         if (err) {
+    //             console.log(err);
+    //         }
+    //         const db = client.db(dbName);
+    //         // inserting song to playlist in db 
+    //         db.collection("allplaylists").insertOne(songdetails, function (err, res) {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    //     });

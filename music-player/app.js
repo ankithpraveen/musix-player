@@ -4,7 +4,6 @@ const session = require('express-session');
 const passport = require('passport');
 
 
-
 app.use(session({
     resave: false,
     saveUninitialized: true,
@@ -15,7 +14,7 @@ const pass = require('./pass');
 pass.passini(app);
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/error' }), (req, res) => {
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/error' }), (req, res,next) => {
     //console.log(req.user);
     res.redirect('/playSong');
 });
