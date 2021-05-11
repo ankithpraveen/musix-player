@@ -2,12 +2,35 @@
 
 const passport = require('passport');
 passport.serializeUser(function (user, cb) {
-    cb(null, user);
+    cb(null, user.emails[0].value);
 });
 
-passport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
+/* MongoDB connection */
+const { MongoClient } = require('mongodb');
+const uri = "mongodb+srv://admin:admin@cluster0.wdbez.mongodb.net/test";
+const dbName = "test";
+
+passport.deserializeUser(function (emailid, cb) {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        // inserting user profile in db 
+        db.collection("profiles").findOne({email:emailid}, function (err, res) {
+            if (err) {
+                console.log(err);
+            }
+            else{
+                cb(null, res);
+            }
+            
+        });
+    });
+    
 });
+
+
 
 /*  Google AUTH  */
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -20,6 +43,20 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, done) {
         //Save user in db if needed
+        userdetails = { "email": profile.emails[0].value, "name": profile.displayName };
+        MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+            if (err) {
+                console.log(err);
+            }
+            const db = client.db(dbName);
+            // inserting user profile in db 
+            db.collection("profiles").insertOne(userdetails, function (err, res) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        });
+
         return done(null, profile);
     }
 ));
