@@ -13,8 +13,11 @@
 </p>
 <br>
 <p  id="body">
-    <button onclick="add()">Add to Playlist</button>
-    <div class="container" name="playlists"></div>
+    <button onclick="showpl()">Show Playlists</button>
+    <p id="email" hidden><%=email%></p>
+
+    <div class="container" name="playlists"> <%=pls%></div>
+
 </p>
 <input type="range" id="volume1" min="0" max="2" value="1" step="0.01">
 <input type="range" id="seek1" min="0" max="1" value="0" step="0.01">

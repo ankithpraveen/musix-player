@@ -12,7 +12,7 @@ let storage = new GridFsStorage({
     url: uri,
     file: (req, file) => {
         return {
-            
+
             bucketName: 'fs',
             //Setting collection name, default name is fs      
             filename: req.body.song_name
@@ -50,7 +50,7 @@ module.exports.loadPlay = (req, res) => {
     //         }
     //     });
     // });
-    res.render('psong', {});
+    res.render('psong', { email: req.user.email ,pls:""});
 };
 
 module.exports.loadLogin = (req, res) => {
@@ -88,8 +88,9 @@ module.exports.uploadFile = (req, res) => {
             title: 'Uploaded',
             message: `File ${req.file.filename} has been uploaded!`
         });*/
-        else{
-            console.log("DOnE?");}
+        else {
+            console.log("DOnE?");
+        }
     });
 };
 
@@ -103,7 +104,7 @@ module.exports.getFile = (req, res) => {
     }
     let fileName = req.body.song_name;
     //Connect to the MongoDB client
-    MongoClient.connect(uri,{useNewUrlParser: true,useUnifiedTopology: true},function (err, client) {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
 
         if (err) {
             console.log(err);
@@ -122,17 +123,22 @@ module.exports.getFile = (req, res) => {
     });
 };
 
+module.exports.getPlaylists = (req, res) => {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        // finding playlists in db
+        query = { email: req.user.email }
+        db.collection("allplaylists").find(query).toArray(function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            console.log("yupp")
+            res.render('psong', { pls: result });
+        });
+    });
 
- // songdetails = {email: "email", plname: "playlist1", song_name: document.getElementById('sname').value} //add email
-    // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //         const db = client.db(dbName);
-    //         // inserting song to playlist in db 
-    //         db.collection("allplaylists").insertOne(songdetails, function (err, res) {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    //     });
+};
+

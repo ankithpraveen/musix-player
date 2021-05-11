@@ -96,6 +96,14 @@ function resume() {
     isPlaying = 1;
 }
 
+function showpl(){
+    axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
+        console.log(response);
+    }, (error) => {
+        console.log(error);
+    });
+}
+
 function stop(){
     source1.stop();
     isPlaying = 0;
