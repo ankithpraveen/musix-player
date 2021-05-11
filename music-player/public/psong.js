@@ -1,3 +1,5 @@
+// const { default: axios } = require("axios");
+
 const getAudioContext = () => {
     AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContent = new AudioContext();
@@ -97,11 +99,14 @@ function resume() {
 }
 
 function showpl(){
-    axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
-        console.log(response);
-    }, (error) => {
-        console.log(error);
+    axios.get('/getPlaylists').then((response) => {
+        console.log(response.data);
     });
+    // axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
+    //     console.log(response);
+    // }, (error) => {
+    //     console.log(error);
+    // });
 }
 
 function stop(){

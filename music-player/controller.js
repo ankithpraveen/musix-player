@@ -50,7 +50,12 @@ module.exports.loadPlay = (req, res) => {
     //         }
     //     });
     // });
-    res.render('psong', { email: req.user.email ,pls:""});
+    var email='';
+    if (req.user)
+    {
+        email=req.user.email;
+    }
+    res.render('psong', { email: email ,pls:""});
 };
 
 module.exports.loadLogin = (req, res) => {
@@ -135,7 +140,7 @@ module.exports.getPlaylists = (req, res) => {
             if (err) {
                 console.log(err);
             }
-            console.log("yupp")
+            console.log("yupp");
             res.render('psong', { pls: result });
         });
     });
