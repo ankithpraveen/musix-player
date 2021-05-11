@@ -73,6 +73,12 @@ module.exports.logout = (req, res) => {
 
 
 module.exports.uploadFile = (req, res) => {
+
+    if (!req.isAuthenticated()) {
+        res.send("GTFO");
+        return null;
+    }
+    
     upload(req, res, (err) => {
         if (err) {
             console.log(err);
@@ -91,6 +97,10 @@ module.exports.uploadFile = (req, res) => {
 module.exports.getFile = (req, res) => {
     //Accepting user input directly is very insecure and should 
     //never be allowed in a production app. Sanitize the input.
+    if (!req.isAuthenticated()){
+        res.send("GTFO");
+        return null;
+    }
     let fileName = req.body.song_name;
     //Connect to the MongoDB client
     MongoClient.connect(uri,{useNewUrlParser: true,useUnifiedTopology: true},function (err, client) {

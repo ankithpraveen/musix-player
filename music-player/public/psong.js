@@ -9,37 +9,66 @@ const getAudioContext = () => {
 var audioContext;
 var gainNode1;
 var source1;
-var first = 1;
-let startedAt = null;
-let pausedAt = null;
+var firstLoad = 1;
+var startedAt = null;
+var pausedAt = null;
 var abuff = null;
+var duration = null;
+var playbackTime = null;
+var rate = null;
+var isPlaying = 0;
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const volumeControl1 = document.querySelector('#volume1');
     volumeControl1.addEventListener('input', function () {
         gainNode1.gain.value = this.value;
     }, false);
+    const seekControl1 = document.querySelector('#seek1');
+    seekControl1.addEventListener('input', function () {
+        pause();
+    }, false);
+    seekControl1.addEventListener('mouseup', function () {
+        seek(this.value);
+    }, false);
+
+    //Keep track of playback duration
+    setInterval(() => {
+        if (isPlaying) {
+            playbackTime = (Date.now() - startedAt) / 1000;
+            rate = parseInt((playbackTime * 100) / duration, 10);
+            seekControl1.value = rate / 100;
+            if (rate > 100) {
+                isPlaying = 0;
+            }
+        }
+    }, 100)
+
 }, false);
 
 
 function play() {
-    if (first) {
+    if (firstLoad) {
         audioContext = getAudioContext();
-        first = 0;
+        firstLoad = 0;
     }
     load = document.getElementById("load");
     load.innerHTML = "Loading...";
 
-    axios.post('/getSong', { song_name: document.getElementById('sname').value }, { responseType: 'arraybuffer' }).then((response) => {
+    axios.post('/getSong', { song_name: document.getElementById('sname').value }, { responseType: 'arraybuffer', withCredentials: true}).then((response) => {
         // create audioBuffer (decode audio file)
         const audioBuffer = audioContext.decodeAudioData(response.data).then((audioBuffer) => {
+
             source1 = audioContext.createBufferSource();
             source1.buffer = audioBuffer;
             abuff = audioBuffer;
             source1.connect(gainNode1).connect(audioContext.destination);
-            stratedAt = Date.now();
-            console.log(startedAt/1000,pausedAt/1000);
+
+            startedAt = Date.now();
+            duration = audioBuffer.duration;
+
             source1.start();
+            isPlaying = 1;
             load.innerHTML = "";
         });
     }, (error) => {
@@ -54,15 +83,33 @@ function play() {
 function pause() {
     source1.stop();
     pausedAt = Date.now() - startedAt;
-    console.log(startedAt/1000,pausedAt/1000);
+    isPlaying = 0;
 }
 
 function resume() {
     // source1.start();
     startedAt = Date.now() - pausedAt;
-    console.log(startedAt/1000,pausedAt/1000);
     source1 = audioContext.createBufferSource();
     source1.buffer = abuff;
     source1.connect(gainNode1).connect(audioContext.destination);
-    source1.start();
+    source1.start(0,pausedAt/1000);
+    isPlaying = 1;
 }
+
+function stop(){
+    source1.stop();
+    isPlaying = 0;
+}
+
+
+function seek(val){
+    rate = val*100;
+    playbackTime = (duration * rate) / 100;
+    source1 = audioContext.createBufferSource();
+    source1.buffer = abuff;
+    source1.connect(gainNode1).connect(audioContext.destination);
+    source1.start(0, playbackTime);
+    startedAt = Date.now() - playbackTime * 1000;
+    isPlaying = 1;
+}
+
