@@ -5,7 +5,10 @@ const getAudioContext = () => {
     return audioContent;
 };
 
-
+/* MongoDB connection */
+const { MongoClient } = require('mongodb');
+const uri = "mongodb+srv://admin:admin@cluster0.wdbez.mongodb.net/test";
+const dbName = "test";
 
 var audioContext;
 var gainNode1;
@@ -28,15 +31,33 @@ function play() {
     load = document.getElementById("load");
     load.innerHTML = "Loading...";
 
-    axios.post('/getSong', {song_name: document.getElementById('sname').value}, {responseType: 'arraybuffer'}).then((response) => {
-            // create audioBuffer (decode audio file)
-            const audioBuffer = audioContext.decodeAudioData(response.data).then((audioBuffer) => {
-                source1 = audioContext.createBufferSource();
-                source1.buffer = audioBuffer;
-                source1.connect(gainNode1).connect(audioContext.destination);
-                source1.start();
-                load.innerHTML = "";
-            });
-        }, (error) => {console.log(error);
+    axios.post('/getSong', { song_name: document.getElementById('sname').value }, { responseType: 'arraybuffer' }).then((response) => {
+        // create audioBuffer (decode audio file)
+        const audioBuffer = audioContext.decodeAudioData(response.data).then((audioBuffer) => {
+            source1 = audioContext.createBufferSource();
+            source1.buffer = audioBuffer;
+            source1.connect(gainNode1).connect(audioContext.destination);
+            source1.start();
+            load.innerHTML = "";
+        });
+    }, (error) => {
+        console.log(error);
     });
 }
+
+function add() {
+    // songdetails = {email: "email", plname: "playlist1", song_name: document.getElementById('sname').value} //add email
+    // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+    //         if (err) {
+    //             console.log(err);
+    //         }
+    //         const db = client.db(dbName);
+    //         // inserting song to playlist in db 
+    //         db.collection("allplaylists").insertOne(songdetails, function (err, res) {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    //     });
+    console.log(document.getElementById('sname').value);
+    }
