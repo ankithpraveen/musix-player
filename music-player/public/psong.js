@@ -66,3 +66,11 @@ function resume() {
     source1.connect(gainNode1).connect(audioContext.destination);
     source1.start();
 }
+
+function showpl(){
+    axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
+        console.log(response);
+    }, (error) => {
+        console.log(error);
+    });
+}

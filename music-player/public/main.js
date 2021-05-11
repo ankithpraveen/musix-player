@@ -17,5 +17,6 @@ function upload() {
     }
     else{
         alert("too big");
+        
     }
 }
