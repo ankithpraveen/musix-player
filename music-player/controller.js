@@ -33,7 +33,12 @@ storage.on('connection', (db) => {
 
 
 module.exports.loadnewSong = (req, res) => {
-    res.render('newsong', {});
+    var email='';
+    if (req.user)
+    {
+        email=req.user.email;
+    }
+    res.render('newsong', {email:email});
 };
 
 module.exports.loadLibrary = (req, res) => {
@@ -103,6 +108,20 @@ module.exports.uploadFile = (req, res) => {
             message: `File ${req.file.filename} has been uploaded!`
         });*/
         else {
+            // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+            //     if (err) {
+            //         console.log(err);
+            //     }
+            //     const db = client.db(dbName);
+            //     // finding songs in db
+            //     query = { email: req.user.email ,playlistname:"MyUploadedSongs"};
+            //     db.collection("allplaylists").find(query).toArray(function (err, result) {
+            //         if (err) {
+            //             console.log(err);
+            //         }
+            //         res.send(result);
+            //     });
+            // });
             console.log("DOnE?");
         }
     });
@@ -169,6 +188,20 @@ module.exports.getSongs = (req, res) => {
         }
         const db = client.db(dbName);
         db.collection("fs.files").find({}).toArray(function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            res.send(result);
+        });
+    });
+}
+module.exports.getUploadedSongs = (req, res) => {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        db.collection("allplaylists").find({email:req.user.email,playlistname:"MyUploadedSongs"}).toArray(function (err, result) {
             if (err) {
                 console.log(err);
             }

@@ -4,6 +4,7 @@ function upload() {
     if (song.files[0].size / 1048576 < 5) {
         formData.append("song_name", document.getElementById('sname').value);
         formData.append("song", song.files[0]);
+        console.log(formData);
         axios.post('/uploadSong', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -14,6 +15,18 @@ function upload() {
             }, (error) => {
                 console.log(error);
             });
+            axios.get('/getUploadedSongs').then((response) => {
+                response.data[0].songnames.push(document.getElementById('sname').value);
+                console.log(response.data[0].songnames);
+        axios.post('/uploadSong', {
+            emial:document.getElementById('email'),
+            playlistname:"MyUploadedSongs",
+            songnames:response.data[0].songnames
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+        })
     }
     else{
         alert("too big");
