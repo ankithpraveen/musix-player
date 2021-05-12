@@ -98,17 +98,17 @@ function resume() {
     isPlaying = 1;
 }
 
-function showpl(){
-    axios.get('/getPlaylists').then((response) => {
-        console.log(response.data);
-        document.getElementById("pls").innerHTML=response.data[0];
-    });
-    // axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
-    //     console.log(response);
-    // }, (error) => {
-    //     console.log(error);
-    // });
-}
+// function showpl(){
+//     axios.get('/getPlaylists').then((response) => {
+//         console.log(response.data);
+//         document.getElementById("pls").innerHTML=response.data[0];
+//     });
+//     // axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
+//     //     console.log(response);
+//     // }, (error) => {
+//     //     console.log(error);
+//     // });
+// }
 
 function stop(){
     source1.stop();

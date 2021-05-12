@@ -13,7 +13,9 @@
 </p>
 <br>
 <p  id="body">
-    <button onclick="showpl()">Show Playlists</button>
+    <form action="/library">
+    <button typr='submit'>Show Playlists</button>
+</form>
     <p id="email" hidden><%=email%></p>
 
     <div class="container" name="playlists" id="pls"> </div>
