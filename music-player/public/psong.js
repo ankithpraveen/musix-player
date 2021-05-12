@@ -101,6 +101,7 @@ function resume() {
 function showpl(){
     axios.get('/getPlaylists').then((response) => {
         console.log(response.data);
+        document.getElementById("pls").innerHTML=response.data[0];
     });
     // axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
     //     console.log(response);
