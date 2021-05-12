@@ -32,11 +32,11 @@ storage.on('connection', (db) => {
 
 
 
-module.exports.loadHome = (req, res) => {
-    res.render('index', {});
+module.exports.loadnewSong = (req, res) => {
+    res.render('newsong', {});
 };
 
-module.exports.loadPlay = (req, res) => {
+module.exports.loadDash = (req, res) => {
     // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
     //     if (err) {
     //         console.log(err);
@@ -135,13 +135,26 @@ module.exports.getPlaylists = (req, res) => {
         }
         const db = client.db(dbName);
         // finding playlists in db
-        query = { email: req.user.email }
+        query = { email: req.user.email };
+        testlist = {email: req.user.email,playlistname:"pl1",songnames:["abc","xyz"]};
+        // db.collection("allplaylists").insertOne(testlist, function(err, res) {
+        //     if (err){
+        //         console.log(err);
+        //     }
+        //     console.log("1 document inserted");
+        //   });
         db.collection("allplaylists").find(query).toArray(function (err, result) {
             if (err) {
                 console.log(err);
             }
             console.log("yupp");
-            res.render('psong', { pls: result });
+            res.send(result);
+            var email='';
+            if (req.user)
+            {
+                email=req.user.email;
+            }
+            res.render('psong', { pls: result ,email:req.user.email});
         });
     });
 

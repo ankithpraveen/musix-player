@@ -1,13 +1,14 @@
 const controller = require('./controller');
 
 module.exports.paths = app => {
-    app.get('/', controller.loadHome);
-    app.get('/login', controller.loadLogin);
+    app.get('/', controller.loadLogin);
     app.get('/logout', controller.logout);
-    app.get('/playSong', controller.loadPlay);
+    app.get('/dashboard', controller.loadDash);
+    app.get('/newSong',controller.loadnewSong);
+    // app.get('/library',controller.loadLibrary);
     app.post('/uploadSong', controller.uploadFile);
     app.post('/getSong', controller.getFile);
-    app.post('/getPlaylists',controller.getPlaylists);
+    app.get('/getPlaylists',controller.getPlaylists);
 
 
 }

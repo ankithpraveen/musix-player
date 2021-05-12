@@ -16,7 +16,7 @@ pass.passini(app);
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/error' }), (req, res,next) => {
     //console.log(req.user);
-    res.redirect('/playSong');
+    res.redirect('/dashboard');
 });
 
 
