@@ -55,7 +55,7 @@ module.exports.loadDash = (req, res) => {
     {
         email=req.user.email;
     }
-    res.render('psong', { email: email ,pls:""});
+    res.render('dash', { email: email});
 };
 
 module.exports.loadLogin = (req, res) => {
@@ -107,7 +107,7 @@ module.exports.getFile = (req, res) => {
         res.send("GTFO");
         return null;
     }
-    let fileName = req.body.song_name;
+    let fileId = req.body.song_id;
     //Connect to the MongoDB client
     MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
 
@@ -118,7 +118,7 @@ module.exports.getFile = (req, res) => {
         const db = client.db(dbName);
         var gfs = Grid(db, mongo);
         var readstream = gfs.createReadStream({
-            filename: fileName
+            _id: fileId
         });
         readstream.on('error', function (err) {
             console.log("An error occured", err);
@@ -136,7 +136,7 @@ module.exports.getPlaylists = (req, res) => {
         const db = client.db(dbName);
         // finding playlists in db
         query = { email: req.user.email };
-        testlist = {email: req.user.email,playlistname:"pl1",songnames:["abc","xyz"]};
+        //testlist = {email: req.user.email,playlistname:"pl1",songnames:["abc","xyz"]};
         // db.collection("allplaylists").insertOne(testlist, function(err, res) {
         //     if (err){
         //         console.log(err);
@@ -147,16 +147,23 @@ module.exports.getPlaylists = (req, res) => {
             if (err) {
                 console.log(err);
             }
-            console.log("yupp");
             res.send(result);
-            var email='';
-            if (req.user)
-            {
-                email=req.user.email;
-            }
-            res.render('psong', { pls: result ,email:req.user.email});
         });
     });
 
 };
 
+module.exports.getSongs = (req, res) => {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        db.collection("fs.files").find({}).toArray(function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            res.send(result);
+        });
+    });
+}

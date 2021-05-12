@@ -2,21 +2,23 @@
 <html>
 <body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="psong.js"></script>
+<script src="dash.js"></script>
 <h1>Play song by name</h1>
-<input type="text" id="sname" value="">
-<button onclick="play()">Play</button>
-<button onclick="pause()">Pause</button>
-<button onclick="resume()">Resume</button>
+<input onkeyup = "dynamic_search(event)" onclick="getSongs()" type="text" id="sname" value="">
+<button onclick = "pause()">Pause</button>
+<button onclick = "resume()">Resume</button>
 <p  id="load">
 
 </p>
 <br>
 <p  id="body">
-    <button onclick="showpl()">Show Playlists</button>
+    <!-- <button onclick="showpl()">Show Playlists</button> -->
     <p id="email" hidden><%=email%></p>
 
     <div class="container" name="playlists" id="pls"> </div>
+
+</p>
+<p  id="sugg">
 
 </p>
 <input type="range" id="volume1" min="0" max="2" value="1" step="0.01">

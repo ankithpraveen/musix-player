@@ -1,5 +1,3 @@
-// const { default: axios } = require("axios");
-
 const getAudioContext = () => {
     AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContent = new AudioContext();
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 
-function play() {
+function play(id) {
     if (firstLoad) {
         audioContext = getAudioContext();
         firstLoad = 0;
@@ -57,7 +55,7 @@ function play() {
     load = document.getElementById("load");
     load.innerHTML = "Loading...";
 
-    axios.post('/getSong', { song_name: document.getElementById('sname').value }, { responseType: 'arraybuffer', withCredentials: true}).then((response) => {
+    axios.post('/getSongData', { song_id: id }, { responseType: 'arraybuffer', withCredentials: true }).then((response) => {
         // create audioBuffer (decode audio file)
         const audioBuffer = audioContext.decodeAudioData(response.data).then((audioBuffer) => {
 
@@ -78,9 +76,6 @@ function play() {
     });
 }
 
-// function add() {
-//     console.log(document.getElementById('sname').value);
-//     }
 
 function pause() {
     source1.stop();
@@ -94,14 +89,31 @@ function resume() {
     source1 = audioContext.createBufferSource();
     source1.buffer = abuff;
     source1.connect(gainNode1).connect(audioContext.destination);
-    source1.start(0,pausedAt/1000);
+    source1.start(0, pausedAt / 1000);
     isPlaying = 1;
 }
 
-function showpl(){
+function stop() {
+    source1.stop();
+    isPlaying = 0;
+}
+
+
+function seek(val) {
+    rate = val * 100;
+    playbackTime = (duration * rate) / 100;
+    source1 = audioContext.createBufferSource();
+    source1.buffer = abuff;
+    source1.connect(gainNode1).connect(audioContext.destination);
+    source1.start(0, playbackTime);
+    startedAt = Date.now() - playbackTime * 1000;
+    isPlaying = 1;
+}
+
+function showpl() {
     axios.get('/getPlaylists').then((response) => {
-        console.log(response.data);
-        document.getElementById("pls").innerHTML=response.data[0];
+        //console.log(response.data);
+        document.getElementById("pls").innerHTML = response.data[0];
     });
     // axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
     //     console.log(response);
@@ -110,20 +122,43 @@ function showpl(){
     // });
 }
 
-function stop(){
-    source1.stop();
-    isPlaying = 0;
+
+var gotSongs = 0;
+var songs = null;
+function getSongs() {
+    if (!gotSongs) {
+        axios.get('/getSongs').then((response) => {
+            gotSongs = 1;
+            songs = response.data;
+        });
+        
+    }
 }
 
-
-function seek(val){
-    rate = val*100;
-    playbackTime = (duration * rate) / 100;
-    source1 = audioContext.createBufferSource();
-    source1.buffer = abuff;
-    source1.connect(gainNode1).connect(audioContext.destination);
-    source1.start(0, playbackTime);
-    startedAt = Date.now() - playbackTime * 1000;
-    isPlaying = 1;
+function dynamic_search(event) {
+    if (gotSongs){
+        var x = event.keyCode;
+        var sugg = document.getElementById("sugg");
+        if (x >= 32 || x === 8) {
+            var squery = document.getElementById("sname");
+            var search_text = squery.value;
+            var slength = search_text.length;
+            if(!slength){
+                sugg.innerHTML = ""
+                return null;
+            }
+            search_text = search_text.toLowerCase();
+            var to_display = [];
+            for(var i=0; i<songs.length; i++){
+                if(songs[i].filename.slice(0,slength)==search_text){
+                    to_display.push({ name: songs[i].filename, id: songs[i]._id});
+                }
+            }            
+            sugg.innerHTML=""
+            for (var i = 0; i < to_display.length; i++) {
+                sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')">`+to_display[i].name+`</button>`;
+            }
+        }
+    }
 }
 
