@@ -209,3 +209,31 @@ module.exports.getUploadedSongs = (req, res) => {
         });
     });
 }
+
+module.exports.loaduploadedsongs = (req, res) => {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        db.collection("allplaylists").find({email:req.user.email,playlistname:"MyUploadedSongs"}).toArray(function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            var temp = result[0].songnames;
+            temp.push(req.body.newsongname)
+            db.collection("allplaylists").updateOne({email:req.user.email,playlistname:"MyUploadedSongs"}, { $set: {songnames:temp} }, function(err, res) {
+                if (err){
+                    console.log(err);
+                }
+                console.log("1 document updated");
+              });
+        });
+    });
+    var email='';
+    if (req.user)
+    {
+        email=req.user.email;
+    }
+    res.render('newsong', {email:email});
+};

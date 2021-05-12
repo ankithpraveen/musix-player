@@ -11,22 +11,17 @@ function upload() {
             }
         })
             .then((response) => {
-                console.log(response);
+                // console.log(response);
             }, (error) => {
                 console.log(error);
             });
-            axios.get('/getUploadedSongs').then((response) => {
-                response.data[0].songnames.push(document.getElementById('sname').value);
-                console.log(response.data[0].songnames);
-        axios.post('/uploadSong', {
-            emial:document.getElementById('email'),
-            playlistname:"MyUploadedSongs",
-            songnames:response.data[0].songnames
-            })
+        axios.post('/myuploadedsongs',{
+            newsongname:document.getElementById('sname').value
+            } ,{withCredentials: true })
             .then(function (response) {
-              console.log(response);
+            //   console.log(response);
             })
-        })
+    
     }
     else{
         alert("too big");
