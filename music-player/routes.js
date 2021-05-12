@@ -5,12 +5,10 @@ module.exports.paths = app => {
     app.get('/logout', controller.logout);
     app.get('/dashboard', controller.loadDash);
     app.get('/newSong',controller.loadnewSong);
-    // app.get('/library',controller.loadLibrary);
+    app.get('/library',controller.loadLibrary);
     app.post('/uploadSong', controller.uploadFile);
     app.post('/getSong', controller.getFile);
     app.get('/getPlaylists',controller.getPlaylists);
 
 
 }
-
-//tes
