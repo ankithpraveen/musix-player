@@ -36,6 +36,15 @@ module.exports.loadnewSong = (req, res) => {
     res.render('newsong', {});
 };
 
+module.exports.loadLibrary = (req, res) => {
+    var email='';
+    if (req.user)
+    {
+        email=req.user.email;
+    }
+    res.render('library', {email:email});
+};
+
 module.exports.loadDash = (req, res) => {
     // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
     //     if (err) {
