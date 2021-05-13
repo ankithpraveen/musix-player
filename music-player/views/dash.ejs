@@ -2,11 +2,33 @@
 <html>
 <body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="dash.js"></script>
-<h1>Play song by name</h1>
-<input onkeyup = "dynamic_search(event)" onclick="getSongs()" type="text" id="sname" value="">
-<button onclick = "pause()">Pause</button>
-<button onclick = "resume()">Resume</button>
+
+<div class="container">
+    <nav class="navbar navbar-expand-xl navbar-light">
+        <a href="/dashboard" class="navbar-brand">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        <div class="collapse navbar-collapse"  id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li><a class="nav-link" href="/library">My Library</a></li>
+                <li><a class="nav-link" href="/newSong">Upload Songs</a></li>
+                <li><a class="nav-link" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <h1 class="mb-3">Play song by name</h1>
+    <label for="sname" class="form-label">Enter Song Name</label>
+<input type="text" class="form-control" onkeyup = "dynamic_search(event)" onclick="getSongs()" id="sname" value="">
+<button onclick = "pause()" class="btn btn-primary"><i class="fa fa-pause"></i></button>
+<button onclick = "resume()" class="btn btn-primary"><i class="fa fa-play"></i></button>
+
 <p  id="load">
 
 </p>
@@ -21,8 +43,8 @@
 <p  id="sugg">
 
 </p>
-<input type="range" id="volume1" min="0" max="2" value="1" step="0.01">
+<i class="fa fa-volume-up"></i><input type="range" id="volume1" min="0" max="2" value="1" step="0.01"><br><br>
 <input type="range" id="seek1" min="0" max="1" value="0" step="0.01">
-
+</div>
 </body>
 </html>

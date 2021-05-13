@@ -156,7 +156,7 @@ function dynamic_search(event) {
             }            
             sugg.innerHTML=""
             for (var i = 0; i < to_display.length; i++) {
-                sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')">`+to_display[i].name+`</button>`;
+                sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
             }
         }
     }
