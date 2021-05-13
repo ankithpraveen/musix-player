@@ -33,43 +33,35 @@ storage.on('connection', (db) => {
 
 
 module.exports.loadnewSong = (req, res) => {
-    var email='';
     if (req.user)
     {
-        email=req.user.email;
+        res.render('newsong', {email:req.user.email});
     }
-    res.render('newsong', {email:email});
+    else{
+        res.redirect('/');
+    }
+    
 };
 
 module.exports.loadLibrary = (req, res) => {
-    var email='';
     if (req.user)
     {
-        email=req.user.email;
+        res.render('library', {email:req.user.email});
     }
-    res.render('library', {email:email});
+    else{
+        res.redirect('/');
+    }
+    
 };
 
 module.exports.loadDash = (req, res) => {
-    // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    //     const db = client.db(dbName);
-    //     //finding user's playlists 
-    //     var query={email:req.user.email}
-    //     db.collection("allplaylists").find(query).toArray( function (err, res) {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //     });
-    // });
-    var email='';
     if (req.user)
     {
-        email=req.user.email;
+        res.render('dash', { email: req.user.email});
     }
-    res.render('dash', { email: email});
+    else{
+        res.redirect('/');
+    }
 };
 
 module.exports.loadLogin = (req, res) => {
@@ -108,20 +100,6 @@ module.exports.uploadFile = (req, res) => {
             message: `File ${req.file.filename} has been uploaded!`
         });*/
         else {
-            // MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
-            //     if (err) {
-            //         console.log(err);
-            //     }
-            //     const db = client.db(dbName);
-            //     // finding songs in db
-            //     query = { email: req.user.email ,playlistname:"MyUploadedSongs"};
-            //     db.collection("allplaylists").find(query).toArray(function (err, result) {
-            //         if (err) {
-            //             console.log(err);
-            //         }
-            //         res.send(result);
-            //     });
-            // });
             console.log("DOnE?");
         }
     });
@@ -164,13 +142,6 @@ module.exports.getPlaylists = (req, res) => {
         const db = client.db(dbName);
         // finding playlists in db
         query = { email: req.user.email };
-        //testlist = {email: req.user.email,playlistname:"pl1",songnames:["abc","xyz"]};
-        // db.collection("allplaylists").insertOne(testlist, function(err, res) {
-        //     if (err){
-        //         console.log(err);
-        //     }
-        //     console.log("1 document inserted");
-        //   });
         db.collection("allplaylists").find(query).toArray(function (err, result) {
             if (err) {
                 console.log(err);
@@ -178,7 +149,6 @@ module.exports.getPlaylists = (req, res) => {
             res.send(result);
         });
     });
-
 };
 
 module.exports.getSongs = (req, res) => {
@@ -220,6 +190,15 @@ module.exports.loaduploadedsongs = (req, res) => {
             if (err) {
                 console.log(err);
             }
+            if(result.length===0){
+                db.collection("allplaylists").insertOne({email:req.user.email,playlistname:"MyUploadedSongs",songnames:[req.body.newsongname]}, function(err, res) {
+                    if (err){
+                        console.log(err);
+                    }
+                    console.log("1 document inserted");
+                  });
+            }
+            else{
             var temp = result[0].songnames;
             temp.push(req.body.newsongname)
             db.collection("allplaylists").updateOne({email:req.user.email,playlistname:"MyUploadedSongs"}, { $set: {songnames:temp} }, function(err, res) {
@@ -228,12 +207,30 @@ module.exports.loaduploadedsongs = (req, res) => {
                 }
                 console.log("1 document updated");
               });
+            }
+            
         });
     });
-    var email='';
     if (req.user)
     {
-        email=req.user.email;
+        res.render('newsong', {email:req.user.email});
     }
-    res.render('newsong', {email:email});
+    else{
+        res.redirect('/');
+    }
 };
+
+module.exports.addNewPlaylist = (req, res) => {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        db.collection("allplaylists").insertOne({email:req.user.email,playlistname:req.body.playlistname,songnames:req.body.songnames}, function(err, res) {
+            if (err){
+                console.log(err);
+            }
+            console.log("1 document inserted");
+          });
+    });
+}
