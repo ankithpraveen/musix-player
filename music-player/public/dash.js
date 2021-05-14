@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, false);
 
     //Keep track of playback duration
+    var dur = document.getElementById("duration");
     setInterval(() => {
         if (isPlaying) {
             playbackTime = (Date.now() - startedAt) / 1000;
@@ -41,8 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
             if (rate > 100) {
                 isPlaying = 0;
             }
+            var seconds = (Math.round(playbackTime));
+            var minutes = Math.floor(seconds/60);
+            seconds = seconds%60;
+            if (seconds<10){
+                seconds='0'+seconds.toString();
+            }
+            dur.innerHTML=minutes+":"+seconds;
         }
-    }, 100)
+    }, 50)
 
 }, false);
 
@@ -53,7 +61,11 @@ function play(id) {
         firstLoad = 0;
     }
     load = document.getElementById("load");
-    load.innerHTML = "Loading...";
+    load.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-white" role="status">
+      <span class="visually-hidden"></span>
+    </div>
+  </div>`;
 
     axios.post('/getSongData', { song_id: id }, { responseType: 'arraybuffer', withCredentials: true }).then((response) => {
         // create audioBuffer (decode audio file)
@@ -81,6 +93,7 @@ function pause() {
     source1.stop();
     pausedAt = Date.now() - startedAt;
     isPlaying = 0;
+    playpauseswitch();
 }
 
 function resume() {
@@ -91,6 +104,7 @@ function resume() {
     source1.connect(gainNode1).connect(audioContext.destination);
     source1.start(0, pausedAt / 1000);
     isPlaying = 1;
+    playpauseswitch();
 }
 
 function stop() {
@@ -102,12 +116,16 @@ function stop() {
 function seek(val) {
     rate = val * 100;
     playbackTime = (duration * rate) / 100;
-    source1 = audioContext.createBufferSource();
-    source1.buffer = abuff;
-    source1.connect(gainNode1).connect(audioContext.destination);
-    source1.start(0, playbackTime);
-    startedAt = Date.now() - playbackTime * 1000;
-    isPlaying = 1;
+    if (isPlaying){
+        source1 = audioContext.createBufferSource();
+        source1.buffer = abuff;
+        source1.connect(gainNode1).connect(audioContext.destination);
+        source1.start(0, playbackTime);
+        startedAt = Date.now() - playbackTime * 1000;
+    }
+    else{
+        pausedAt=playbackTime * 1000;
+    }
 }
 
 function showpl() {
@@ -156,9 +174,42 @@ function dynamic_search(event) {
             }            
             sugg.innerHTML=""
             for (var i = 0; i < to_display.length; i++) {
-                sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
+                // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
+                sugg.innerHTML = sugg.innerHTML+`<div class="col-sm-2" style="padding-top:10%">
+                <div class="card">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+to_display[i].id+`')">
+                    <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top" alt="..." />
+                    <a>
+                      <div class="mask d-flex justify-content-center align-items-center"
+                        style="background-color: rgba(0, 0, 0, 0.45);">
+                        <button class="btn btn-primary btn-floating bg-white">
+                          <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+                        </button>
+                      </div>
+                    </a>
+                  </div>
+      
+                  <div class="card-body">
+                    <h5 class="card-title">`+to_display[i].name+`</h5>
+                  </div>
+                </div>
+              </div>;`
             }
         }
     }
 }
 
+function playpauseswitch(){
+    var playpause = document.getElementById("playpause");
+    if (isPlaying){
+    playpause.innerHTML=`<button onclick="pause()" class="btn btn-primary btn-floating bg-white">
+    <i class="fa fa-pause-circle fa-3x" style="color:#0f64f2"></i>
+  </button>`
+    }
+    else{
+        playpause.innerHTML=`<button onclick="resume()" class="btn btn-primary btn-floating bg-white">
+    <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+  </button>`
+    }
+
+}
