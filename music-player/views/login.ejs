@@ -2,20 +2,48 @@
 <!doctype html>
 <html>
 <head>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="./mdb/js/mdb.min.js"></script>
+  <link href="./mdb/css/mdb.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <script src="dash.js"></script>
+
+  <!-- Navbar -->
+  <!-- Container wrapper -->
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+    <div class="container-fluid">
+      <!-- Toggle button -->
+      <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <!-- Collapsible wrapper -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Navbar brand -->
+        <a class="navbar-brand mt-2 mt-lg-0" href="#">
+          <img src="https://i.pinimg.com/474x/1e/9d/c2/1e9dc24db36c9226da76585bd0314b19.jpg" height="40" alt=""
+            loading="lazy" onclick=showfooter()/>
+        </a>
+        </div>
+        </div>
+  </nav>
+
+  <!-- Navbar -->
     <title>Google SignIn</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        body        { padding-top:70px; }
-    </style>
 </head>
 <body>
+    <div class="d-flex align-items-center" style="
+        background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
+        height: 100vh;
+      ">
 <div class="container">
-    <div class="jumbotron text-center text-primary">
-        <h1><span class="fa fa-lock"></span> Social Authentication</h1>
-        <p>Login or Register with:</p>
-        <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google"></span> SignIn with Google</a>
+    <div class="jumbotron text-center" style="color:white">
+        <h1><span class="fa fa-lock"></span> Social Authentication</h1><br>
+        <a href="/auth/google" class="btn btn-outline-warning"><span class="fa fa-google"></span> SignIn with Google</a>
     </div>
+</div>
 </div>
 </body>
 </html> 

@@ -18,7 +18,6 @@ var playbackTime = null;
 var rate = null;
 var isPlaying = 0;
 
-
 document.addEventListener('DOMContentLoaded', function () {
     const volumeControl1 = document.querySelector('#volume1');
     volumeControl1.addEventListener('input', function () {
@@ -62,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function play(id) {
+    document.getElementById("footer").style.display="block";
     if (firstLoad) {
         audioContext = getAudioContext();
         firstLoad = 0;
