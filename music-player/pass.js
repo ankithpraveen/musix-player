@@ -17,17 +17,19 @@ passport.deserializeUser(function (emailid, cb) {
         }
         const db = client.db(dbName);
         // inserting user profile in db 
-        db.collection("profiles").findOne({email:emailid}, function (err, res) {
+        
+        db.collection("profiles").findOne({ email: emailid }, function (err, res) {
             if (err) {
                 console.log(err);
             }
-            else{
+            else {
                 cb(null, res);
+                client.close();
             }
-            
+
         });
     });
-    
+
 });
 
 
@@ -49,15 +51,26 @@ passport.use(new GoogleStrategy({
                 console.log(err);
             }
             const db = client.db(dbName);
-            // inserting user profile in db 
-            db.collection("profiles").insertOne(userdetails, function (err, res) {
-                if (err) {
-                    console.log(err);
+            db.collection("profiles").findOne({ email: profile.emails[0].value }, function (err, result) {
+                if (err) throw err;
+                if (result) {
+                    client.close();
+                    return done(null, profile);
                 }
+                else {
+                    // inserting user profile in db 
+                    db.collection("profiles").insertOne(userdetails, function (err, res) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        client.close();
+                        return done(null, profile);
+                    });
+                }
+
             });
         });
 
-        return done(null, profile);
     }
 ));
 

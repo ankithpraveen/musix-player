@@ -129,6 +129,8 @@ module.exports.getFile = (req, res) => {
         readstream.on('error', function (err) {
             console.log("An error occured", err);
             throw err;
+        }).on('end', function (err) {
+            client.close();
         });
         readstream.pipe(res);
     });
@@ -147,6 +149,7 @@ module.exports.getPlaylists = (req, res) => {
                 console.log(err);
             }
             res.send(result);
+            client.close();
         });
     });
 };
@@ -162,6 +165,7 @@ module.exports.getSongs = (req, res) => {
                 console.log(err);
             }
             res.send(result);
+            client.close();
         });
     });
 }
@@ -176,6 +180,7 @@ module.exports.getUploadedSongs = (req, res) => {
                 console.log(err);
             }
             res.send(result);
+            client.close();
         });
     });
 }
@@ -196,6 +201,7 @@ module.exports.loaduploadedsongs = (req, res) => {
                         console.log(err);
                     }
                     console.log("1 document inserted");
+                    client.close();
                   });
             }
             else{
@@ -206,6 +212,7 @@ module.exports.loaduploadedsongs = (req, res) => {
                     console.log(err);
                 }
                 console.log("1 document updated");
+                client.close();
               });
             }
             
@@ -231,6 +238,7 @@ module.exports.addNewPlaylist = (req, res) => {
                 console.log(err);
             }
             console.log("1 document inserted");
+            client.close();
           });
     });
 }
