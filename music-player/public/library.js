@@ -2,7 +2,7 @@ var plsongs = [];
 
 
 function showpl(){
-    axios.get('/getPlaylists').then((response) => {
+    axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
         var plshtml = "";
         for (var i in response.data){
             plshtml+="<tr><td>"+response.data[i].playlistname+"</td><td>";
