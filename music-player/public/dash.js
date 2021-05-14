@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // if (durseconds<10){
             //     durseconds='0'+durseconds.toString();
             // }
-            dur.innerHTML=minutes+":"+seconds+`/`;
+            dur.innerHTML=minutes+":"+seconds;
         }
     }, 100)
 
