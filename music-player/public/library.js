@@ -5,21 +5,32 @@ function showpl(){
     axios.get('/getPlaylists').then((response) => {
         var plshtml = "";
         for (var i in response.data){
-            plshtml+="<tr><td>"+response.data[i].playlistname+"</td><td>";
-            for (var j in response.data[i].songnames){
-                plshtml+="<button>"+response.data[i].songnames[j]+"</button>";
-            }
-            plshtml+="</td></tr>";
+            plshtml+=`<div class="col-sm-3" style="padding-top:1%">
+            <div class="card">
+            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+            <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top" alt="..." />
+            <a>
+              <div class="mask d-flex justify-content-center align-items-center"
+                style="background-color: rgba(0, 0, 0, 0.45);">
+                <button class="btn btn-primary btn-floating bg-white">
+                  <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+                </button>
+              </div>
+            </a>
+          </div>
+                <div class="card-body">
+                  <h5 class="card-title">`+response.data[i].playlistname+`</h5>
+                </div>
+                <ul class="list-group list-group-flush">`;
+                  for (var j in response.data[i].songnames){
+                      plshtml+=`<li class="list-group-item">`+response.data[i].songnames[j]+`</li>`;
+                  }
+                plshtml+=`</ul>
+              </div></div>`;
         }
-        document.getElementById("pls").innerHTML=plshtml;
-    });
-}
 
-function newplaylistdetails(){
-    document.getElementById("pldetails").style.display="block";
-    document.getElementById("newpl").style.display="none";
-    document.getElementById("confirm").style.display="block";
-    console.log("enter new playlist details");
+        document.getElementById("pls").innerHTML+=plshtml;
+    });
 }
 
 var gotSongs = 0;
@@ -55,7 +66,7 @@ function dynamic_search(event) {
             }            
             sugg.innerHTML=""
             for (var i = 0; i < to_display.length; i++) {
-                sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "addtolist('`+to_display[i].name+`')">`+to_display[i].name+`</button>`;
+                sugg.innerHTML = sugg.innerHTML+"<br>"+`<button type="button" class="btn btn-floating" onclick = "addtolist('`+to_display[i].name+`')"><i class="fa fa-plus-circle fa-3x"></i></button>`+to_display[i].name;
             }
         }
     }
@@ -74,4 +85,5 @@ function newplaylist(){
 
 function addtolist(sname){
     plsongs.push(sname);
+    console.log(plsongs);
 }

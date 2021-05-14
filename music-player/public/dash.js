@@ -48,9 +48,15 @@ document.addEventListener('DOMContentLoaded', function () {
             if (seconds<10){
                 seconds='0'+seconds.toString();
             }
-            dur.innerHTML=minutes+":"+seconds;
+            // var durseconds = (Math.round(duration));
+            // var durminutes = Math.floor(durseconds/60);
+            // durseconds = durseconds%60;
+            // if (durseconds<10){
+            //     durseconds='0'+durseconds.toString();
+            // }
+            dur.innerHTML=minutes+":"+seconds+`/`;
         }
-    }, 50)
+    }, 100)
 
 }, false);
 
@@ -193,7 +199,7 @@ function dynamic_search(event) {
                     <h5 class="card-title">`+to_display[i].name+`</h5>
                   </div>
                 </div>
-              </div>;`
+              </div>`;
             }
         }
     }
