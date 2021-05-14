@@ -1,5 +1,236 @@
 <!DOCTYPE html>
 <html>
+
+<body onload="showpl()">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./mdb/js/mdb.min.js"></script>
+    <link href="./mdb/css/mdb.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <script src="library.js"></script>
+
+    <!-- Navbar -->
+    <!-- Container wrapper -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+        <div class="container-fluid">
+            <!-- Toggle button -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Navbar brand -->
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                    <img src="https://i.pinimg.com/474x/1e/9d/c2/1e9dc24db36c9226da76585bd0314b19.jpg" height="40"
+                        alt="" loading="lazy" />
+                </a>
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="/library"> My Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="/newSong">Upload New Song</a>
+                    </li>
+                </ul>
+                <!-- Left links -->
+            </div>
+            <!-- Collapsible wrapper -->
+
+            <!-- Right elements -->
+            <div class="d-flex align-items-center">
+                <form class="d-flex" style="padding-right: 5%">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" type="text"
+                        class="form-control" onkeyup="dynamic_search(event)" onclick="getSongs()" id="sname" value="" />
+                </form>
+                <!-- Avatar -->
+                <a style="padding-right: 5%" class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
+                    id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-user fa-lg"></i>
+                    <!-- <img
+              src="https://mdbootstrap.com/img/new/avatars/2.jpg"
+              class="rounded-circle"
+              height="40"
+              alt=""
+              loading="lazy"
+            /> -->
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="#">My profile</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Settings</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Right elements -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+
+    <!-- Navbar -->
+
+    <div style="
+        background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
+        height: 200vh;
+      ">
+        <br />
+
+        <div id="body">
+            <p id="email" hidden>
+                <%=email%>
+            </p>
+
+
+            <div class="container">
+                <h4 style="color:white">My Playlists</h4>
+                <div class="row" id="pls">
+                    <div class="col-sm-3" style="padding-top:1%">
+                        <div class="card">
+                            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" data-mdb-toggle="modal"
+                                data-mdb-target="#newpldetmodal">
+                                <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top"
+                                    alt="..." />
+                                <a>
+                                    <div class="mask d-flex justify-content-center align-items-center"
+                                        style="background-color: rgba(0, 0, 0, 0.45);">
+                                        <button class="btn btn-primary btn-floating bg-white">
+                                            <i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i>
+                                        </button>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">New Playlist</h5>
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><br><br>
+        <!-- <div class="container">
+            
+           <button onclick=newplaylistdetails() id="newpl">Create new Playlist</button><br>
+        <p id="pldetails" hidden>
+            Playlist Name:<input type="text" id="plname" value=""><br>
+            Song Name:<input onkeyup="dynamic_search(event)" onclick="getSongs()" type="text" id="songname" value="">
+        <p id="sugg">
+        </p>
+        <button onclick=newplaylist() id="confirm" hidden>Create</button><br>
+        </p> -->
+        <!-- </div>
+        <br /><br />
+    </div> --> 
+
+    <div class="modal fade" id="newpldetmodal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">New Playlist Details</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-outline">
+                            <input type="text" id="plname" class="form-control" required />
+                            <label class="form-label" for="plname">Playlist Name</label>
+                        </div>
+                        <div class="form-outline">
+                            <input type="text" id="songname" class="form-control" onkeyup="dynamic_search(event)"
+                                onclick="getSongs()" required />
+                            <label class="form-label" for="songname">Song Name</label>
+                        </div>
+                        <div id="sugg">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="newplaylist()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="plmodal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">New Playlist Details</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="plmodalbody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="newplaylist()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+<footer class="text-center text-white fixed-bottom" style="
+      background-image: linear-gradient(to top, rgb(0, 0, 0), rgb(31, 31, 31));
+    ">
+    <!-- Grid container -->
+
+    <div class="container p-2">
+
+        <div class="range">
+            <input style="width: 100%;height:1px" type="range" id="seek1" min="0" max="1" value="0" step="0.0001" />
+        </div>
+        <div class="d-flex justify-content-around">
+            <div class="p-1">
+                <p id="duration">0:00</p>
+            </div>
+            <div class="p-1" id="playpause">
+                <button onclick="pause()" class="btn btn-primary btn-floating bg-white">
+                    <i class="fa fa-pause-circle fa-3x" style="color:#0f64f2"></i>
+                </button>
+            </div>
+            <div class="p-1">
+                <i class="fa fa-volume-up"></i>
+                <input style="position: relative; right: auto;padding:auto" type="range" id="volume1" min="0" max="2"
+                    value="1" step="0.01" />
+            </div>
+        </div>
+    </div>
+</footer>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
 <style>
 table, th, td {
   border: 1px solid black;
@@ -8,14 +239,14 @@ table, th, td {
 <body onload="showpl()">
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="library.js"></script>
-<!-- <h1>Play song by name</h1>
+<h1>Play song by name</h1>
 <input type="text" id="sname" value="">
 <button onclick="play()">Play</button>
 <button onclick="pause()">Pause</button>
 <button onclick="resume()">Resume</button>
 <p  id="load"> -->
 
-</p>
+<!-- </p>
 <br>
 <p  id="body">
     
@@ -44,4 +275,4 @@ table, th, td {
 </p>
 
 </body>
-</html>
+</html> -->
