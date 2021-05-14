@@ -64,7 +64,7 @@ function dynamic_search(event) {
             }
             sugg.innerHTML = ""
             for (var i = 0; i < to_display.length; i++) {
-                sugg.innerHTML = sugg.innerHTML + "<br>" + `<button type="button" class="btn btn-floating" onclick = "addtolist('` + to_display[i].name + `')"><i class="fa fa-plus-circle fa-3x"></i></button>` + to_display[i].name;
+                sugg.innerHTML = sugg.innerHTML + "<br>" + `<button type="button" class="btn btn-floating" onclick = "addtolist('` + to_display[i].name + `')"><i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i></button>` + to_display[i].name;
             }
         }
     }
