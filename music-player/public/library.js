@@ -1,5 +1,5 @@
 var newplsongs = [];
-var plsongs = [];
+var newplids = [];
 
 
 function showpl() {
@@ -64,26 +64,31 @@ function dynamic_search(event) {
             }
             sugg.innerHTML = ""
             for (var i = 0; i < to_display.length; i++) {
-                sugg.innerHTML = sugg.innerHTML + "<br>" + `<button type="button" class="btn btn-floating" onclick = "addtolist('` + to_display[i].name + `')"><i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i></button>` + to_display[i].name;
+                sugg.innerHTML = sugg.innerHTML + "<br>" + `<button type="button" class="btn btn-floating" onclick = "addtolist('` + to_display[i].name + `,` + to_display[i].id+`')"><i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i></button>` + to_display[i].name;
             }
         }
     }
 }
 
-function newplaylist() {
-    axios.post('/newplaylist', {
+function newplaylist(u,d) {
+    axios.post('/newPlaylist', {
         playlistname: document.getElementById('plname').value,
-        songnames: newplsongs
+        songnames: newplsongs,
+        songids: newplids,
+        update: u,
+        delete: d
     }, { withCredentials: true })
         .then(function (response) {
             //   console.log(response);
         })
-    console.log("adding new playlist");
+    newplsongs = [];
+    newplids = [];
 }
 
-function addtolist(sname) {
+
+function addtolist(sname,id) {
     newplsongs.push(sname);
-    console.log(newplsongs);
+    newplids.push(id);
 }
 
 function showplsongs(songliststr) {

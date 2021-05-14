@@ -14,7 +14,7 @@ module.exports.paths = app => {
     app.post('/uploadSong', controller.uploadFile);
     app.post('/getSongData', controller.getFile);
     app.post('/myuploadedsongs',controller.loaduploadedsongs);
-    app.post('/newplaylist',controller.addNewPlaylist);
+    app.post('/newPlaylist',controller.addNewPlaylist);
 
 
 }

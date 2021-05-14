@@ -233,12 +233,32 @@ module.exports.addNewPlaylist = (req, res) => {
             console.log(err);
         }
         const db = client.db(dbName);
-        db.collection("allplaylists").insertOne({email:req.user.email,playlistname:req.body.playlistname,songnames:req.body.songnames}, function(err, res) {
-            if (err){
-                console.log(err);
-            }
-            console.log("1 document inserted");
-            client.close();
-          });
+        if (req.user.update) {
+            db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: req.body.playlistname }, { $set: { songnames: req.body.songnames, songids: req.body.songids }}, function (err, res) {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("1 document updated");
+                client.close();
+            });
+        }
+        else if (req.user.delete) {
+            db.collection("allplaylists").deleteOne({ email: req.user.email, playlistname: req.body.playlistname}, function (err, res) {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("1 document deleted");
+                client.close();
+            });
+        }
+        else {
+            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids}, function(err, res) {
+                if (err){
+                    console.log(err);
+                }
+                console.log("1 document inserted");
+                client.close();
+            });
+        }
     });
 }
