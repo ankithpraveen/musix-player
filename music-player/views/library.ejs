@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 
-<body onload="showpl()">
+<body onload="showpl()" style="
+background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
+height: 100%;
+margin-bottom:5%;
+">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="./mdb/js/mdb.min.js"></script>
     <link href="./mdb/css/mdb.min.css" rel="stylesheet" />
@@ -30,10 +34,10 @@
                 <!-- Left links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/dashboard">Dashboard</a>
+                        <a class="nav-link" style="color: white" href="/dashboard">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color: white" href="/library"> My Library</a>
+                        <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/library"> My Library</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" style="color: white" href="/newSong">Upload New Song</a>
@@ -80,46 +84,37 @@
 
     <!-- Navbar -->
 
-    <div style="
-        background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
-        height: 200vh;
-      ">
-        <br />
 
-        <div id="body">
-            <p id="email" hidden>
-                <%=email%>
-            </p>
+    <div id="body">
 
-
-            <div class="container">
-                <h4 style="color:white">My Playlists</h4>
-                <div class="row" id="pls">
-                    <div class="col-sm-3" style="padding-top:1%">
-                        <div class="card">
-                            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" data-mdb-toggle="modal"
-                                data-mdb-target="#newpldetmodal">
-                                <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top"
-                                    alt="..." />
-                                <a>
-                                    <div class="mask d-flex justify-content-center align-items-center"
-                                        style="background-color: rgba(0, 0, 0, 0.45);">
-                                        <button class="btn btn-primary btn-floating bg-white">
-                                            <i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i>
-                                        </button>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">New Playlist</h5>
-                            </div>
-        
+        <div class="container">
+            <h4 style="color:white">My Playlists</h4>
+            <div class="row" id="pls">
+                <div class="col-sm-3" style="padding-top:1%">
+                    <div class="card">
+                        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" data-mdb-toggle="modal"
+                            data-mdb-target="#newpldetmodal">
+                            <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top"
+                                alt="..." />
+                            <a>
+                                <div class="mask d-flex justify-content-center align-items-center"
+                                    style="background-color: rgba(0, 0, 0, 0.45);">
+                                    <button class="btn btn-primary btn-floating bg-white">
+                                        <i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i>
+                                    </button>
+                                </div>
+                            </a>
                         </div>
+                        <div class="card-body">
+                            <h5 class="card-title">New Playlist</h5>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div><br><br>
-        <!-- <div class="container">
+        </div>
+    </div><br><br>
+    <!-- <div class="container">
             
            <button onclick=newplaylistdetails() id="newpl">Create new Playlist</button><br>
         <p id="pldetails" hidden>
@@ -129,9 +124,9 @@
         </p>
         <button onclick=newplaylist() id="confirm" hidden>Create</button><br>
         </p> -->
-        <!-- </div>
+    <!-- </div>
         <br /><br />
-    </div> --> 
+    </div> -->
 
     <div class="modal fade" id="newpldetmodal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -143,13 +138,11 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-outline">
-                            <input type="text" id="plname" class="form-control" required />
-                            <label class="form-label" for="plname">Playlist Name</label>
+                            <input type="text" id="plname" required placeholder="Playlist Name"/>
                         </div>
                         <div class="form-outline">
-                            <input type="text" id="songname" class="form-control" onkeyup="dynamic_search(event)"
-                                onclick="getSongs()" required />
-                            <label class="form-label" for="songname">Song Name</label>
+                            <input type="text" id="songname" onkeyup="dynamic_search(event)"
+                                onclick="getSongs()" required placeholder="Song Name"/>
                         </div>
                         <div id="sugg">
                         </div>
@@ -173,7 +166,7 @@
                     <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="plmodalbody">
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
