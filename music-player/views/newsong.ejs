@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 
-<body>
+<body style="
+background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
+height: 100%;
+margin-bottom:5%;
+">
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="./mdb/js/mdb.min.js"></script>
   <link href="./mdb/css/mdb.min.css" rel="stylesheet" />
@@ -29,13 +33,13 @@
         <!-- Left links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/dashboard">Dashboard</a>
+            <a class="nav-link" style="color: white" href="/dashboard">Dashboard</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" style="color: white" href="/library"> My Library</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" style="color: white" href="/newSong">Upload New Song</a>
+            <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/newSong">Upload New Song</a>
           </li>
         </ul>
         <!-- Left links -->
@@ -99,12 +103,10 @@
             
             <form>
             <div class="form-outline mb-4">
-              <input type="text" id="sname" class="form-control"  style="border: 1px solid white;"/>
-              <label class="form-label text-white" for="sname"  style="margin-left: 20px;">Song Name</label>
+              <input type="text" id="sname" style="border: 1px solid white;" placeholder="Song Name"/>
             </div>
             <div class="form-outline mb-4">
-              <input type="file" class="form-control text-white" id="file1"  style="border: 1px solid white;"/>
-              <label class="form-label text-white" for="file1">Choose File</label>
+              <input type="file" id="file1" class="text-white"  style="border: 1px solid white;"/>
             </div>
               <button type="submit" class="btn btn-primary btn-block" onclick="upload()">Upload</button>
           </form>
