@@ -262,3 +262,13 @@ module.exports.addNewPlaylist = (req, res) => {
         }
     });
 }
+
+module.exports.loadnewpldets = (req, res) => {
+    if (req.user)
+    {
+        res.render('newpldets', { email: req.user.email});
+    }
+    else{
+        res.redirect('/');
+    }
+};

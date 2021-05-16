@@ -615,7 +615,7 @@ function playlists() {
                           class="card-img-top"
                           alt="..."
                         />
-                        <a>
+                        <a href="/newpldets">
                           <div
                             class="
                               mask
