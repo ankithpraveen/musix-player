@@ -7,6 +7,7 @@ const getAudioContext = () => {
 
 
 var audioContext;
+var dur;
 var gainNode1;
 var source1;
 var firstLoad = 1;
@@ -19,6 +20,7 @@ var rate = null;
 var isPlaying = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
+    dur = document.getElementById("duration");
     const volumeControl1 = document.querySelector('#volume1');
     volumeControl1.addEventListener('input', function () {
         gainNode1.gain.value = this.value;
@@ -26,13 +28,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const seekControl1 = document.querySelector('#seek1');
     seekControl1.addEventListener('input', function () {
         pause();
+        rate = this.value * 100;
+        playbackTime = (duration * rate) / 100;
+        updatedur();
     }, false);
     seekControl1.addEventListener('mouseup', function () {
         seek(this.value);
     }, false);
 
-    //Keep track of playback duration
-    var dur = document.getElementById("duration");
+
     setInterval(() => {
         if (isPlaying) {
             playbackTime = (Date.now() - startedAt) / 1000;
@@ -41,26 +45,23 @@ document.addEventListener('DOMContentLoaded', function () {
             if (rate > 100) {
                 isPlaying = 0;
             }
-            var seconds = (Math.round(playbackTime));
-            var minutes = Math.floor(seconds/60);
-            seconds = seconds%60;
-            if (seconds<10){
-                seconds='0'+seconds.toString();
-            }
-            // var durseconds = (Math.round(duration));
-            // var durminutes = Math.floor(durseconds/60);
-            // durseconds = durseconds%60;
-            // if (durseconds<10){
-            //     durseconds='0'+durseconds.toString();
-            // }
-            dur.innerHTML=minutes+":"+seconds;
+            updatedur();
         }
     }, 100)
 
 }, false);
 
-
-function play(id) {
+function updatedur(){
+    //Keep track of playback duration
+    var seconds = (Math.round(playbackTime));
+    var minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    if (seconds < 10) {
+        seconds = '0' + seconds.toString();
+    }
+    dur.innerHTML = minutes + ":" + seconds;
+}
+function play(id,name) {
     document.getElementById("footer").style.display="block";
     if (firstLoad) {
         audioContext = getAudioContext();
@@ -88,6 +89,7 @@ function play(id) {
             source1.start();
             isPlaying = 1;
             load.innerHTML = "";
+            document.getElementById("nplaying").innerHTML =name;
         });
     }, (error) => {
         console.log(error);
@@ -120,8 +122,6 @@ function stop() {
 
 
 function seek(val) {
-    rate = val * 100;
-    playbackTime = (duration * rate) / 100;
     if (isPlaying){
         source1 = audioContext.createBufferSource();
         source1.buffer = abuff;
@@ -134,17 +134,6 @@ function seek(val) {
     }
 }
 
-function showpl() {
-    axios.get('/getPlaylists').then((response) => {
-        //console.log(response.data);
-        document.getElementById("pls").innerHTML = response.data[0];
-    });
-    // axios.post('/getPlaylists', { email: document.getElementById("email").innerHTML}, { responseType: 'arraybuffer' }).then((response) => {
-    //     console.log(response);
-    // }, (error) => {
-    //     console.log(error);
-    // });
-}
 
 
 var gotSongs = 0;
@@ -183,8 +172,8 @@ function dynamic_search(event) {
                 // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
                 sugg.innerHTML = sugg.innerHTML+`<div class="col-sm-2" style="padding-top:10%">
                 <div class="card">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+to_display[i].id+`')">
-                    <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top" alt="..." />
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+ to_display[i].id + `','` + to_display[i].name +`')">
+                    <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
                     <a>
                       <div class="mask d-flex justify-content-center align-items-center"
                         style="background-color: rgba(0, 0, 0, 0.45);">
@@ -218,4 +207,472 @@ function playpauseswitch(){
   </button>`
     }
 
+}
+
+
+var newplsongs = [];
+var newplids = [];
+var result = null;
+
+function showpl() {
+    axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
+        result = response.data;
+        var plshtml = "";
+        for (var i in response.data) {
+            if (i < 2) {
+                var pls = document.getElementById("pls0");
+                plshtml += `<div class="col-sm-2" style="padding-top:1%">
+                <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
+                onclick="showplsongs('`+ (response.data[i]._id).toString() + `')">
+                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                <a>
+                <div class="mask d-flex justify-content-center align-items-center"
+                style="background-color: rgba(0, 0, 0, 0.45);">
+                <button class="btn btn-primary btn-floating bg-white">
+                <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+                </button>
+                </div>
+                </a>
+                </div>
+                <div class="card-body">
+                <h5 class="card-title">`+ response.data[i].playlistname + `</h5>
+                </div></div></div>`;
+                pls.innerHTML += plshtml;
+                plshtml = "";
+            }
+            else {
+                if (i % 3 == 2) {
+                    plshtml += `<div class="carousel-item"> <div class="row"">`;
+                    plshtml += `<div class="col-sm-3" style="padding-top: 1%"></div>`;
+                }
+
+                plshtml += `<div class="col-sm-2" style="padding-top:1%">
+                <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
+                onclick="showplsongs('`+ (response.data[i]._id).toString() + `')">
+                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                <a>
+                <div class="mask d-flex justify-content-center align-items-center"
+                style="background-color: rgba(0, 0, 0, 0.45);">
+                <button class="btn btn-primary btn-floating bg-white">
+                <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+                </button>
+                </div>
+                </a>
+                </div>
+                <div class="card-body">
+                <h5 class="card-title">`+ response.data[i].playlistname + `</h5>
+                </div></div></div>`;
+                if (i % 3 == 1) {
+                    plshtml += `</div></div>`
+                    document.getElementById("car").innerHTML += plshtml;
+                    plshtml = ""
+                }
+            }
+        }
+
+
+
+    });
+}
+
+// var gotSongs = 0;
+// var songs = null;
+// function getSongs() {
+//     if (!gotSongs) {
+//         axios.get('/getSongs').then((response) => {
+//             gotSongs = 1;
+//             songs = response.data;
+//         });
+
+//     }
+// }
+
+// function newplaylist(u, d) {
+//     axios.post('/newPlaylist', {
+//         playlistname: document.getElementById('plname').value,
+//         songnames: newplsongs,
+//         songids: newplids,
+//         update: u,
+//         delete: d
+//     }, { withCredentials: true })
+//         .then(function (response) {
+//         })
+//     newplsongs = [];
+//     newplids = [];
+// }
+
+
+// function addtolist(sname, id) {
+//     newplsongs.push(sname);
+//     newplids.push(id);
+// }
+
+function showplsongs(plid) {
+    var inner = "";
+    var flag = 1;
+    document.getElementById("carousel2").remove();
+    for (var i in result) {
+        if (result[i]._id == plid) {
+            console.log(result[i]);
+            inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
+            for (var j = 0; j < result[i].songnames.length; j++) {
+                if (j % 3 == 0) {
+                    var x = "";
+                    if (j == 0) { x = "active"; }
+                    inner += `<div class="carousel-item ` + x + ` "><div class="row"><div class="col-sm-3" style="padding-top: 1%"></div>`;
+                    flag = 1;
+                }
+                inner += `<div class="col-sm-2" style="padding-top:1%">
+                <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
+                onclick="play('`+ result[i].songids[j] + `','` + result[i].songnames[j] + `')">
+                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                <a>
+                <div class="mask d-flex justify-content-center align-items-center"
+                style="background-color: rgba(0, 0, 0, 0.45);">
+                <button class="btn btn-primary btn-floating bg-white">
+                <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+                </button>
+                </div>
+                </a>
+                </div>
+                <div class="card-body">
+                <h5 class="card-title">`+ result[i].songnames[j] + `</h5>
+                </div></div></div>`;
+                if (j % 3 == 2) {
+                    inner += `</div></div>`;
+                    flag = 0;
+                }
+            }
+            if (flag) { inner += `</div></div>`; }
+            inner += `</div>
+            <button class="carousel-control-prev"  type="button"  data-mdb-target="#carouselExampleControls2"  data-mdb-slide="prev" >
+            <span  class="carousel-control-prev-icon"   aria-hidden="true" ></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleControls2"   data-mdb-slide="next"   >
+            <span   class="carousel-control-next-icon"  aria-hidden="true"  ></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+            </div>
+            </div>`;
+            document.getElementById("container").innerHTML += inner;
+            break;
+        }
+    }
+}
+
+function dash(){
+    document.getElementById("main").innerHTML = `<!-- Navbar -->
+        <!-- Container wrapper -->
+        <div
+        style="
+            background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
+            height: 100%;
+        "
+        id="main"
+        >
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+            <div class="container-fluid">
+            <!-- Toggle button -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <i class="fa fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Navbar brand -->
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                <img
+                    src="https://i.pinimg.com/474x/1e/9d/c2/1e9dc24db36c9226da76585bd0314b19.jpg"
+                    height="40"
+                    alt=""
+                    loading="lazy"
+                    onclick="showfooter()"
+                />
+                </a>
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a
+                    class="nav-link active"
+                    style="color: rgb(54, 176, 233)"
+                    href="/dashboard"
+                    >Dashboard</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white" href="javascript:void(0);" onclick="playlists()">
+                    My Library</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white" href="/newSong"
+                    >Upload New Song</a
+                    >
+                </li>
+                </ul>
+                <!-- Left links -->
+            </div>
+            <!-- Collapsible wrapper -->
+
+            <!-- Right elements -->
+            <div class="d-flex align-items-center">
+                <form class="d-flex" style="padding-right: 5%">
+                <input
+                    class="form-control me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                    type="text"
+                    class="form-control"
+                    onkeyup="dynamic_search(event)"
+                    onclick="getSongs()"
+                    id="sname"
+                    value=""
+                />
+                </form>
+                <!-- Avatar -->
+                <a
+                style="padding-right: 5%"
+                class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                href="#"
+                id="navbarDropdownMenuLink"
+                role="button"
+                data-mdb-toggle="dropdown"
+                aria-expanded="false"
+                >
+                <i class="fa fa-user fa-lg"></i>
+                <!-- <img
+                src="https://mdbootstrap.com/img/new/avatars/2.jpg"
+                class="rounded-circle"
+                height="40"
+                alt=""
+                loading="lazy"
+                /> -->
+                </a>
+                <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdownMenuLink"
+                >
+                <li>
+                    <a class="dropdown-item" href="#">My profile</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">Settings</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                </li>
+                </ul>
+            </div>
+            <!-- Right elements -->
+            </div>
+            <!-- Container wrapper -->
+        </nav>
+
+        <!-- Navbar -->
+
+        <div id="load"></div>
+        <div class="container">
+            <div class="row" id="sugg"></div>
+        </div>
+
+        <br /><br />`;
+}
+
+
+
+function playlists() {
+    document.getElementById("main").innerHTML = `<!-- Navbar -->
+      <!-- Container wrapper -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+        <div class="container-fluid">
+          <!-- Toggle button -->
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-mdb-toggle="collapse"
+            data-mdb-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <!-- Collapsible wrapper -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Navbar brand -->
+            <a class="navbar-brand mt-2 mt-lg-0" href="#">
+              <img
+                src="https://i.pinimg.com/474x/1e/9d/c2/1e9dc24db36c9226da76585bd0314b19.jpg"
+                height="40"
+                alt=""
+                loading="lazy"
+              />
+            </a>
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" style="color: white" href="javascript:void(0);" onclick="dash()"
+                  >Dashboard</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  style="color: rgb(54, 176, 233)"
+                  href="/library"
+                >
+                  My Library</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" style="color: white" href="/newSong"
+                  >Upload New Song</a
+                >
+              </li>
+            </ul>
+            <!-- Left links -->
+          </div>
+          <!-- Collapsible wrapper -->
+
+          <!-- Right elements -->
+            <!-- Avatar -->
+            <a
+              style="padding-right: 5%"
+              class="dropdown-toggle d-flex align-items-center hidden-arrow"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa fa-user fa-lg"></i>
+              <!-- <img
+              src="https://mdbootstrap.com/img/new/avatars/2.jpg"
+              class="rounded-circle"
+              height="40"
+              alt=""
+              loading="lazy"
+            /> -->
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li>
+                <a class="dropdown-item" href="#">My profile</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">Settings</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Right elements -->
+        </div>
+        <!-- Container wrapper -->
+      </nav>
+
+      <!-- Navbar -->
+      <div id="load"></div>
+      <div id="body">
+        <div class="container" id="container">
+          <h4 style="color: white">My Playlists</h4>
+          <div
+            id="carouselExampleControls1"
+            class="carousel slide"
+            data-mdb-ride="carousel"
+          >
+            <div class="carousel-inner" id="car">
+              <div class="carousel-item active">
+                <div class="row" id="pls0">
+                  <div class="col-sm-3" style="padding-top: 1%"></div>
+                  <div class="col-sm-2" style="padding-top: 1%">
+                    <div class="card">
+                      <div
+                        class="bg-image hover-overlay ripple"
+                        data-mdb-ripple-color="light"
+                        data-mdb-toggle="modal"
+                        data-mdb-target="#newpldetmodal"
+                      >
+                        <img
+                          src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8"
+                          class="card-img-top"
+                          alt="..."
+                        />
+                        <a>
+                          <div
+                            class="
+                              mask
+                              d-flex
+                              justify-content-center
+                              align-items-center
+                            "
+                            style="background-color: rgba(0, 0, 0, 0.45)"
+                          >
+                            <button
+                              class="btn btn-primary btn-floating bg-white"
+                            >
+                              <i
+                                class="fa fa-plus-circle fa-3x"
+                                style="color: #0f64f2"
+                              ></i>
+                            </button>
+                          </div>
+                        </a>
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title">New Playlist</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-mdb-target="#carouselExampleControls1"
+              data-mdb-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-mdb-target="#carouselExampleControls1"
+              data-mdb-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <br />
+          <br />
+          <div id="carousel2"></div>
+        </div>
+      </div>`;
+      showpl();
 }
