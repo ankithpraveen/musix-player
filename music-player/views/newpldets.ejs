@@ -9,7 +9,7 @@ margin-bottom:5%;
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="./mdb/js/mdb.min.js"></script>
   <link href="./mdb/css/mdb.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <script src="newpldets.js"></script>
 
   <!-- Navbar -->
@@ -90,13 +90,8 @@ margin-bottom:5%;
     <br />
 
     <div id="body">
-      <p id="email" hidden>
-        <%=email%>
-      </p>
-
-
-      <div class="d-flex justify-content-center">
-        <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-4">
           <div class="container" style="margin: 20px;margin-right: 20px;">
             <h4 style="color:white">Create New Playlist</h4>
             <div class="row" id="pls">
@@ -104,37 +99,38 @@ margin-bottom:5%;
               <form method="#">
                 <div class="form-outline mb-4">
                   <input type="text" id="plname"
-                    style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;"
+                    style="border: 1px solid white; width:100%; border-radius:3px; padding-left:5px;"
                     placeholder="Playlist Name" class="">
                 </div>
                 <div class="form-outline mb-4">
                   <input placeholder="Song Name" type="text" onkeyup="dynamic_search(event)" onclick="getSongs()"
                     id="sname" value=""
-                    style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;" />
+                    style="border: 1px solid white; width:100%; border-radius:3px; padding-left:5px;" />
 
                 </div>
-                <div class="row">
-                  <button type="submit" class="btn btn-primary btn-block" onclick="newplaylist()">Create</button>
-                </div><br><br>
-                <div class="row">
-                  <div class="col-sm-5">
-                    <table class="table align-middle table-responsive-md">
-                      <tbody id="tsugg">
-
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="col-sm-1"></div>
-                  <div class="col-sm-5">
-
-                    <table class="table align-middle table-responsive-md">
-                      <tbody id="tadded">
-
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                  <button type="submit" style="width:100%;" class="btn btn-primary btn-block" onclick="newplaylist()">Create</button>
+                  <br><br>
               </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8" style="padding-top:2%;">
+          <div class="row">
+          <div class="col-sm-5" style="padding-left:5%;">
+            <table class="table align-middle table-responsive-md">
+              <tbody id="tsugg">
+
+              </tbody>
+            </table>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-5">
+
+              <table class="table align-middle table-responsive-md">
+                <tbody id="tadded">
+
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
