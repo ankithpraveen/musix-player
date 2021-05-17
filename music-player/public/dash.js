@@ -1,8 +1,8 @@
 const getAudioContext = () => {
-    AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContent = new AudioContext();
-    gainNode1 = audioContent.createGain();
-    return audioContent;
+  AudioContext = window.AudioContext || window.webkitAudioContext;
+  const audioContent = new AudioContext();
+  gainNode1 = audioContent.createGain();
+  return audioContent;
 };
 
 
@@ -20,118 +20,118 @@ var rate = null;
 var isPlaying = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
-    dur = document.getElementById("duration");
-    const volumeControl1 = document.querySelector('#volume1');
-    volumeControl1.addEventListener('input', function () {
-        gainNode1.gain.value = this.value;
-    }, false);
-    const seekControl1 = document.querySelector('#seek1');
-    seekControl1.addEventListener('input', function () {
-        pause();
-        rate = this.value * 100;
-        playbackTime = (duration * rate) / 100;
-        updatedur();
-    }, false);
-    seekControl1.addEventListener('mouseup', function () {
-        seek(this.value);
-    }, false);
+  dur = document.getElementById("duration");
+  const volumeControl1 = document.querySelector('#volume1');
+  volumeControl1.addEventListener('input', function () {
+    gainNode1.gain.value = this.value;
+  }, false);
+  const seekControl1 = document.querySelector('#seek1');
+  seekControl1.addEventListener('input', function () {
+    pause();
+    rate = this.value * 100;
+    playbackTime = (duration * rate) / 100;
+    updatedur();
+  }, false);
+  seekControl1.addEventListener('mouseup', function () {
+    seek(this.value);
+  }, false);
 
 
-    setInterval(() => {
-        if (isPlaying) {
-            playbackTime = (Date.now() - startedAt) / 1000;
-            rate = parseInt((playbackTime * 100) / duration, 10);
-            seekControl1.value = rate / 100;
-            if (rate > 100) {
-                isPlaying = 0;
-            }
-            updatedur();
-        }
-    }, 100)
+  setInterval(() => {
+    if (isPlaying) {
+      playbackTime = (Date.now() - startedAt) / 1000;
+      rate = parseInt((playbackTime * 100) / duration, 10);
+      seekControl1.value = rate / 100;
+      if (rate > 100) {
+        isPlaying = 0;
+      }
+      updatedur();
+    }
+  }, 100)
 
 }, false);
 
-function updatedur(){
-    //Keep track of playback duration
-    var seconds = (Math.round(playbackTime));
-    var minutes = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    if (seconds < 10) {
-        seconds = '0' + seconds.toString();
-    }
-    dur.innerHTML = minutes + ":" + seconds;
+function updatedur() {
+  //Keep track of playback duration
+  var seconds = (Math.round(playbackTime));
+  var minutes = Math.floor(seconds / 60);
+  seconds = seconds % 60;
+  if (seconds < 10) {
+    seconds = '0' + seconds.toString();
+  }
+  dur.innerHTML = minutes + ":" + seconds;
 }
-function play(id,name) {
-    document.getElementById("footer").style.display="block";
-    if (firstLoad) {
-        audioContext = getAudioContext();
-        firstLoad = 0;
-    }
-    load = document.getElementById("load");
-    load.innerHTML = `<div class="d-flex justify-content-center">
+function play(id, name) {
+  document.getElementById("footer").style.display = "block";
+  if (firstLoad) {
+    audioContext = getAudioContext();
+    firstLoad = 0;
+  }
+  load = document.getElementById("load");
+  load.innerHTML = `<div class="d-flex justify-content-center">
     <div class="spinner-border text-white" role="status">
       <span class="visually-hidden"></span>
     </div>
   </div>`;
 
-    axios.post('/getSongData', { song_id: id }, { responseType: 'arraybuffer', withCredentials: true }).then((response) => {
-        // create audioBuffer (decode audio file)
-        const audioBuffer = audioContext.decodeAudioData(response.data).then((audioBuffer) => {
+  axios.post('/getSongData', { song_id: id }, { responseType: 'arraybuffer', withCredentials: true }).then((response) => {
+    // create audioBuffer (decode audio file)
+    const audioBuffer = audioContext.decodeAudioData(response.data).then((audioBuffer) => {
 
-            source1 = audioContext.createBufferSource();
-            source1.buffer = audioBuffer;
-            abuff = audioBuffer;
-            source1.connect(gainNode1).connect(audioContext.destination);
+      source1 = audioContext.createBufferSource();
+      source1.buffer = audioBuffer;
+      abuff = audioBuffer;
+      source1.connect(gainNode1).connect(audioContext.destination);
 
-            startedAt = Date.now();
-            duration = audioBuffer.duration;
+      startedAt = Date.now();
+      duration = audioBuffer.duration;
 
-            source1.start();
-            isPlaying = 1;
-            load.innerHTML = "";
-            document.getElementById("nplaying").innerHTML =name;
-        });
-    }, (error) => {
-        console.log(error);
+      source1.start();
+      isPlaying = 1;
+      load.innerHTML = "";
+      document.getElementById("nplaying").innerHTML = name;
     });
+  }, (error) => {
+    console.log(error);
+  });
 }
 
 
 function pause() {
-    source1.stop();
-    pausedAt = Date.now() - startedAt;
-    isPlaying = 0;
-    playpauseswitch();
+  source1.stop();
+  pausedAt = Date.now() - startedAt;
+  isPlaying = 0;
+  playpauseswitch();
 }
 
 function resume() {
-    // source1.start();
-    startedAt = Date.now() - pausedAt;
-    source1 = audioContext.createBufferSource();
-    source1.buffer = abuff;
-    source1.connect(gainNode1).connect(audioContext.destination);
-    source1.start(0, pausedAt / 1000);
-    isPlaying = 1;
-    playpauseswitch();
+  // source1.start();
+  startedAt = Date.now() - pausedAt;
+  source1 = audioContext.createBufferSource();
+  source1.buffer = abuff;
+  source1.connect(gainNode1).connect(audioContext.destination);
+  source1.start(0, pausedAt / 1000);
+  isPlaying = 1;
+  playpauseswitch();
 }
 
 function stop() {
-    source1.stop();
-    isPlaying = 0;
+  source1.stop();
+  isPlaying = 0;
 }
 
 
 function seek(val) {
-    if (isPlaying){
-        source1 = audioContext.createBufferSource();
-        source1.buffer = abuff;
-        source1.connect(gainNode1).connect(audioContext.destination);
-        source1.start(0, playbackTime);
-        startedAt = Date.now() - playbackTime * 1000;
-    }
-    else{
-        pausedAt=playbackTime * 1000;
-    }
+  if (isPlaying) {
+    source1 = audioContext.createBufferSource();
+    source1.buffer = abuff;
+    source1.connect(gainNode1).connect(audioContext.destination);
+    source1.start(0, playbackTime);
+    startedAt = Date.now() - playbackTime * 1000;
+  }
+  else {
+    pausedAt = playbackTime * 1000;
+  }
 }
 
 
@@ -139,40 +139,40 @@ function seek(val) {
 var gotSongs = 0;
 var songs = null;
 function getSongs() {
-    if (!gotSongs) {
-        axios.get('/getSongs').then((response) => {
-            gotSongs = 1;
-            songs = response.data;
-        });
-        
-    }
+  if (!gotSongs) {
+    axios.get('/getSongs').then((response) => {
+      gotSongs = 1;
+      songs = response.data;
+    });
+
+  }
 }
 
 function dynamic_search(event) {
-    if (gotSongs){
-        var x = event.keyCode;
-        var sugg = document.getElementById("sugg");
-        if (x >= 32 || x === 8) {
-            var squery = document.getElementById("sname");
-            var search_text = squery.value;
-            var slength = search_text.length;
-            if(!slength){
-                sugg.innerHTML = ""
-                return null;
-            }
-            search_text = search_text.toLowerCase();
-            var to_display = [];
-            for(var i=0; i<songs.length; i++){
-                if(songs[i].filename.slice(0,slength)==search_text){
-                    to_display.push({ name: songs[i].filename, id: songs[i]._id});
-                }
-            }            
-            sugg.innerHTML=""
-            for (var i = 0; i < to_display.length; i++) {
-                // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
-                sugg.innerHTML = sugg.innerHTML+`<div class="col-sm-2" style="padding-top:10%">
+  if (gotSongs) {
+    var x = event.keyCode;
+    var sugg = document.getElementById("sugg");
+    if (x >= 32 || x === 8) {
+      var squery = document.getElementById("sname");
+      var search_text = squery.value;
+      var slength = search_text.length;
+      if (!slength) {
+        sugg.innerHTML = ""
+        return null;
+      }
+      search_text = search_text.toLowerCase();
+      var to_display = [];
+      for (var i = 0; i < songs.length; i++) {
+        if (songs[i].filename.slice(0, slength) == search_text) {
+          to_display.push({ name: songs[i].filename, id: songs[i]._id });
+        }
+      }
+      sugg.innerHTML = ""
+      for (var i = 0; i < to_display.length; i++) {
+        // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
+        sugg.innerHTML = sugg.innerHTML + `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+ to_display[i].id + `','` + to_display[i].name +`')">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+ to_display[i].id + `','` + to_display[i].name + `')">
                     <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
                     <a>
                       <div class="mask d-flex justify-content-center align-items-center"
@@ -185,27 +185,27 @@ function dynamic_search(event) {
                   </div>
       
                   <div class="card-body">
-                    <h5 class="card-title">`+to_display[i].name+`</h5>
+                    <h5 class="card-title">`+ to_display[i].name + `</h5>
                   </div>
                 </div>
               </div>`;
-            }
-        }
+      }
     }
+  }
 }
 
-function playpauseswitch(){
-    var playpause = document.getElementById("playpause");
-    if (isPlaying){
-    playpause.innerHTML=`<button onclick="pause()" class="btn btn-primary btn-floating bg-white">
+function playpauseswitch() {
+  var playpause = document.getElementById("playpause");
+  if (isPlaying) {
+    playpause.innerHTML = `<button onclick="pause()" class="btn btn-primary btn-floating bg-white">
     <i class="fa fa-pause-circle fa-3x" style="color:#0f64f2"></i>
   </button>`
-    }
-    else{
-        playpause.innerHTML=`<button onclick="resume()" class="btn btn-primary btn-floating bg-white">
+  }
+  else {
+    playpause.innerHTML = `<button onclick="resume()" class="btn btn-primary btn-floating bg-white">
     <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
   </button>`
-    }
+  }
 
 }
 
@@ -215,13 +215,14 @@ var newplids = [];
 var result = null;
 
 function showpl() {
-    axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
-        result = response.data;
-        var plshtml = "";
-        for (var i in response.data) {
-            if (i < 2) {
-                var pls = document.getElementById("pls0");
-                plshtml += `<div class="col-sm-2" style="padding-top:1%">
+  axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
+    result = response.data;
+    var plshtml = "";
+    var flag = 1;
+    for (var i in response.data) {
+      if (i < 2) {
+        var pls = document.getElementById("pls0");
+        plshtml += `<div class="col-sm-2" style="padding-top:1%">
                 <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
                 onclick="showplsongs('`+ (response.data[i]._id).toString() + `')">
@@ -238,16 +239,16 @@ function showpl() {
                 <div class="card-body">
                 <h5 class="card-title">`+ response.data[i].playlistname + `</h5>
                 </div></div></div>`;
-                pls.innerHTML += plshtml;
-                plshtml = "";
-            }
-            else {
-                if (i % 3 == 2) {
-                    plshtml += `<div class="carousel-item"> <div class="row"">`;
-                    plshtml += `<div class="col-sm-3" style="padding-top: 1%"></div>`;
-                }
-
-                plshtml += `<div class="col-sm-2" style="padding-top:1%">
+        pls.innerHTML += plshtml;
+        plshtml = "";
+      }
+      else {
+        if (i % 3 == 2) {
+          plshtml += `<div class="carousel-item"> <div class="row">`;
+          plshtml += `<div class="col-sm-3" style="padding-top: 1%"></div>`;
+          flag = 1;
+        }
+        plshtml += `<div class="col-sm-2" style="padding-top:1%">
                 <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
                 onclick="showplsongs('`+ (response.data[i]._id).toString() + `')">
@@ -264,17 +265,23 @@ function showpl() {
                 <div class="card-body">
                 <h5 class="card-title">`+ response.data[i].playlistname + `</h5>
                 </div></div></div>`;
-                if (i % 3 == 1) {
-                    plshtml += `</div></div>`
-                    document.getElementById("car").innerHTML += plshtml;
-                    plshtml = ""
-                }
-            }
+        if (i % 3 == 1) {
+          plshtml += `</div></div>`;
+          document.getElementById("car").innerHTML += plshtml;
+          plshtml = "";
+          flag = 0;
         }
 
+      }
+    }
+    if (flag) {
+      plshtml += `</div></div>`;
+      document.getElementById("car").innerHTML += plshtml;
+    }
 
 
-    });
+
+  });
 }
 
 // var gotSongs = 0;
@@ -310,21 +317,20 @@ function showpl() {
 // }
 
 function showplsongs(plid) {
-    var inner = "";
-    var flag = 1;
-    document.getElementById("carousel2").remove();
-    for (var i in result) {
-        if (result[i]._id == plid) {
-            console.log(result[i]);
-            inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
-            for (var j = 0; j < result[i].songnames.length; j++) {
-                if (j % 3 == 0) {
-                    var x = "";
-                    if (j == 0) { x = "active"; }
-                    inner += `<div class="carousel-item ` + x + ` "><div class="row"><div class="col-sm-3" style="padding-top: 1%"></div>`;
-                    flag = 1;
-                }
-                inner += `<div class="col-sm-2" style="padding-top:1%">
+  var inner = "";
+  var flag = 1;
+  document.getElementById("carousel2").remove();
+  for (var i in result) {
+    if (result[i]._id == plid) {
+      inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
+      for (var j = 0; j < result[i].songnames.length; j++) {
+        if (j % 3 == 0) {
+          var x = "";
+          if (j == 0) { x = "active"; }
+          inner += `<div class="carousel-item ` + x + ` "><div class="row"><div class="col-sm-3" style="padding-top: 1%"></div>`;
+          flag = 1;
+        }
+        inner += `<div class="col-sm-2" style="padding-top:1%">
                 <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
                 onclick="play('`+ result[i].songids[j] + `','` + result[i].songnames[j] + `')">
@@ -341,13 +347,13 @@ function showplsongs(plid) {
                 <div class="card-body">
                 <h5 class="card-title">`+ result[i].songnames[j] + `</h5>
                 </div></div></div>`;
-                if (j % 3 == 2) {
-                    inner += `</div></div>`;
-                    flag = 0;
-                }
-            }
-            if (flag) { inner += `</div></div>`; }
-            inner += `</div>
+        if (j % 3 == 2) {
+          inner += `</div></div>`;
+          flag = 0;
+        }
+      }
+      if (flag) { inner += `</div></div>`; }
+      inner += `</div>
             <button class="carousel-control-prev"  type="button"  data-mdb-target="#carouselExampleControls2"  data-mdb-slide="prev" >
             <span  class="carousel-control-prev-icon"   aria-hidden="true" ></span>
             <span class="visually-hidden">Previous</span>
@@ -358,14 +364,14 @@ function showplsongs(plid) {
             </button>
             </div>
             </div>`;
-            document.getElementById("container").innerHTML += inner;
-            break;
-        }
+      document.getElementById("container").innerHTML += inner;
+      break;
     }
+  }
 }
 
-function dash(){
-    document.getElementById("main").innerHTML = `<!-- Navbar -->
+function dash() {
+  document.getElementById("main").innerHTML = `<!-- Navbar -->
         <!-- Container wrapper -->
         <div
         style="
@@ -494,7 +500,7 @@ function dash(){
 
 
 function playlists() {
-    document.getElementById("main").innerHTML = `<!-- Navbar -->
+  document.getElementById("main").innerHTML = `<!-- Navbar -->
       <!-- Container wrapper -->
       <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container-fluid">
@@ -607,8 +613,6 @@ function playlists() {
                       <div
                         class="bg-image hover-overlay ripple"
                         data-mdb-ripple-color="light"
-                        data-mdb-toggle="modal"
-                        data-mdb-target="#newpldetmodal"
                       >
                         <img
                           src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8"
@@ -674,5 +678,5 @@ function playlists() {
           <div id="carousel2"></div>
         </div>
       </div>`;
-      showpl();
+  showpl();
 }
