@@ -7,6 +7,7 @@ var mongo = require('mongodb');
 const uri = "mongodb+srv://admin:admin@cluster0.wdbez.mongodb.net/test";
 const dbName = "test";
 
+var x = null;
 //init gridfs
 let storage = new GridFsStorage({
     url: uri,
@@ -18,6 +19,10 @@ let storage = new GridFsStorage({
             filename: req.body.song_name
             //Setting file name to original name of file    
         }
+    },
+    identifier: function (req, file, cb) {
+        x = mongo.ObjectID();
+        cb(null, x);
     }
 });
 
@@ -84,7 +89,6 @@ module.exports.logout = (req, res) => {
 
 
 module.exports.uploadFile = (req, res) => {
-
     if (!req.isAuthenticated()) {
         res.send("GTFO");
         return null;
@@ -93,13 +97,43 @@ module.exports.uploadFile = (req, res) => {
     upload(req, res, (err) => {
         if (err) {
             console.log(err);
-            //return res.render('index', { title: 'Uploaded Error', message: 'File could not be uploaded', error: err });
         }
-        /*res.render('index', {
-            title: 'Uploaded',
-            message: `File ${req.file.filename} has been uploaded!`
-        });*/
         else {
+            var newsongid = x;
+            MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+                if (err) {
+                    console.log(err);
+                }
+                const db = client.db(dbName);
+                db.collection("allplaylists").find({ email: req.user.email, playlistname: "MyUploadedSongs" }).toArray(function (err, result) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    if (result.length === 0) {
+                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MyUploadedSongs", songnames: [req.body.song_name] ,songids:[newsongid] }, function (err, res) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log("1 document inserted");
+                            client.close();
+                        });
+                    }
+                    else {
+                        var temp1 = result[0].songnames;
+                        var temp2 = result[0].songids;
+                        temp1.push(req.body.song_name);
+                        temp2.push(newsongid);
+                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MyUploadedSongs" }, { $set: { songnames: temp1,songids: temp2 } }, function (err, res) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log("1 document updated");
+                            client.close();
+                        });
+                    }
+
+                });
+            });
             console.log("DOnE?");
         }
     });
@@ -186,38 +220,7 @@ module.exports.getUploadedSongs = (req, res) => {
 }
 
 module.exports.loaduploadedsongs = (req, res) => {
-    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
-        if (err) {
-            console.log(err);
-        }
-        const db = client.db(dbName);
-        db.collection("allplaylists").find({email:req.user.email,playlistname:"MyUploadedSongs"}).toArray(function (err, result) {
-            if (err) {
-                console.log(err);
-            }
-            if(result.length===0){
-                db.collection("allplaylists").insertOne({email:req.user.email,playlistname:"MyUploadedSongs",songnames:[req.body.newsongname]}, function(err, res) {
-                    if (err){
-                        console.log(err);
-                    }
-                    console.log("1 document inserted");
-                    client.close();
-                  });
-            }
-            else{
-            var temp = result[0].songnames;
-            temp.push(req.body.newsongname)
-            db.collection("allplaylists").updateOne({email:req.user.email,playlistname:"MyUploadedSongs"}, { $set: {songnames:temp} }, function(err, res) {
-                if (err){
-                    console.log(err);
-                }
-                console.log("1 document updated");
-                client.close();
-              });
-            }
-            
-        });
-    });
+    
     if (req.user)
     {
         res.render('newsong', {email:req.user.email});
@@ -233,8 +236,8 @@ module.exports.addNewPlaylist = (req, res) => {
             console.log(err);
         }
         const db = client.db(dbName);
-        if (req.user.update) {
-            db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: req.body.playlistname }, { $set: { songnames: req.body.songnames, songids: req.body.songids }}, function (err, res) {
+        if (req.body.update) {
+            db.collection("allplaylists").updateOne({ email: req.user.email, _id: req.body.playlistid }, { $set: { songnames: req.body.songnames, songids: req.body.songids }}, function (err, res) {
                 if (err) {
                     console.log(err);
                 }
@@ -242,8 +245,8 @@ module.exports.addNewPlaylist = (req, res) => {
                 client.close();
             });
         }
-        else if (req.user.delete) {
-            db.collection("allplaylists").deleteOne({ email: req.user.email, playlistname: req.body.playlistname}, function (err, res) {
+        else if (req.body.delete) {
+            db.collection("allplaylists").deleteOne({ email: req.user.email, _id: req.body.playlistid}, function (err, res) {
                 if (err) {
                     console.log(err);
                 }

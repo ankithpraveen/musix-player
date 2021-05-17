@@ -296,9 +296,10 @@ function showpl() {
 //     }
 // }
 
-function newplaylist(u, d,plid) {
+function newplaylist(u, d, plid) {
     axios.post('/newPlaylist', {
-        playlistname: document.getElementById('plname').value,
+        //playlistname: document.getElementById('plname').value,
+        playlistid: plid,
         songnames: newplsongs,
         songids: newplids,
         update: u,
@@ -691,8 +692,8 @@ function removefrompl(plid,songid){
   console.log(plid);
   console.log(songid);
   var sidind = newplids.indexOf(songid.toString());
-  removeElement(newplsongs,sidind);
-  removeElement(newplids,sidind);
+  newplsongs.splice(sidind,1);
+  newplids.splice(sidind,1);
   newplaylist(1,0,plid);
   console.log("removing");
 }
