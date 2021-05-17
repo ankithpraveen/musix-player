@@ -206,8 +206,8 @@ function dynamic_search(event) {
                     <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                     aria-expanded="false">Add to Playlist</button>
                     <ul class="dropdown-menu">`;
-        for (var i in playlists){
-          sugg.innerHTML+=`<li><a class="dropdown-item">`+i.playlistname+`</a></li>`;
+        for (var j in playlists){
+          sugg.innerHTML+=`<li><a class="dropdown-item">`+playlists[j].playlistname+`</a></li>`;
         }
         sugg.innerHTML+=`</ul>
                 </div>
@@ -442,7 +442,7 @@ function dash() {
                     >
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="color: white" href="javascript:void(0);" onclick="playlists()">
+                    <a class="nav-link" style="color: white" href="javascript:void(0);" onclick="lplaylists()">
                     My Library</a
                     >
                 </li>
@@ -523,7 +523,7 @@ function dash() {
 
 
 
-function playlists() {
+function lplaylists() {
   document.getElementById("main").innerHTML = `<!-- Navbar -->
       <!-- Container wrapper -->
       <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
