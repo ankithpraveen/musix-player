@@ -7,7 +7,6 @@ var mongo = require('mongodb');
 const uri = "mongodb+srv://admin:admin@cluster0.wdbez.mongodb.net/test";
 const dbName = "test";
 
-var x = null;
 //init gridfs
 let storage = new GridFsStorage({
     url: uri,
@@ -19,10 +18,6 @@ let storage = new GridFsStorage({
             filename: req.body.song_name
             //Setting file name to original name of file    
         }
-    },
-    identifier: function (req, file, cb) {
-        x = mongo.ObjectID();
-        cb(null, x);
     }
 });
 
@@ -99,7 +94,7 @@ module.exports.uploadFile = (req, res) => {
             console.log(err);
         }
         else {
-            var newsongid = x;
+            var newsongid = req.file.id.toString();
             MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
                 if (err) {
                     console.log(err);
