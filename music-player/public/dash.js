@@ -19,6 +19,10 @@ var playbackTime = null;
 var rate = null;
 var isPlaying = 0;
 
+var newplsongs = [];
+var newplids = [];
+var result = null;
+
 document.addEventListener('DOMContentLoaded', function () {
   dur = document.getElementById("duration");
   const volumeControl1 = document.querySelector('#volume1');
@@ -171,9 +175,9 @@ function dynamic_search(event) {
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
         sugg.innerHTML = sugg.innerHTML + `<div class="col-sm-2" style="padding-top:10%">
-                <div class="card">
+                <div class="card" style="background-color:transparent;">
                   <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+ to_display[i].id + `','` + to_display[i].name + `')">
-                    <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                    <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                     <a>
                       <div class="mask d-flex justify-content-center align-items-center"
                         style="background-color: rgba(0, 0, 0, 0.45);">
@@ -184,9 +188,9 @@ function dynamic_search(event) {
                     </a>
                   </div>
       
-                  <div class="card-body">
-                    <h5 class="card-title">`+ to_display[i].name + `</h5>
-                  </div>
+
+                    <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ to_display[i].name + `</h5>
+
                 </div>
               </div>`;
       }
@@ -210,9 +214,6 @@ function playpauseswitch() {
 }
 
 
-var newplsongs = [];
-var newplids = [];
-var result = null;
 
 function showpl() {
   axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
@@ -223,10 +224,10 @@ function showpl() {
       if (i < 2) {
         var pls = document.getElementById("pls0");
         plshtml += `<div class="col-sm-2" style="padding-top:1%">
-                <div class="card">
+                <div class="card" style="background-color:transparent;">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
                 onclick="showplsongs('`+ (response.data[i]._id).toString() + `')">
-                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                 <a>
                 <div class="mask d-flex justify-content-center align-items-center"
                 style="background-color: rgba(0, 0, 0, 0.45);">
@@ -236,9 +237,8 @@ function showpl() {
                 </div>
                 </a>
                 </div>
-                <div class="card-body">
-                <h5 class="card-title">`+ response.data[i].playlistname + `</h5>
-                </div></div></div>`;
+
+                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5></div></div>`;
         pls.innerHTML += plshtml;
         plshtml = "";
       }
@@ -249,10 +249,10 @@ function showpl() {
           flag = 1;
         }
         plshtml += `<div class="col-sm-2" style="padding-top:1%">
-                <div class="card">
+                <div class="card" style="background-color:transparent;">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
                 onclick="showplsongs('`+ (response.data[i]._id).toString() + `')">
-                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                 <a>
                 <div class="mask d-flex justify-content-center align-items-center"
                 style="background-color: rgba(0, 0, 0, 0.45);">
@@ -262,9 +262,9 @@ function showpl() {
                 </div>
                 </a>
                 </div>
-                <div class="card-body">
-                <h5 class="card-title">`+ response.data[i].playlistname + `</h5>
-                </div></div></div>`;
+
+                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5>
+                </div></div>`;
         if (i % 3 == 1) {
           plshtml += `</div></div>`;
           document.getElementById("car").innerHTML += plshtml;
@@ -296,19 +296,20 @@ function showpl() {
 //     }
 // }
 
-// function newplaylist(u, d) {
-//     axios.post('/newPlaylist', {
-//         playlistname: document.getElementById('plname').value,
-//         songnames: newplsongs,
-//         songids: newplids,
-//         update: u,
-//         delete: d
-//     }, { withCredentials: true })
-//         .then(function (response) {
-//         })
-//     newplsongs = [];
-//     newplids = [];
-// }
+function newplaylist(u, d,plid) {
+    axios.post('/newPlaylist', {
+        playlistname: document.getElementById('plname').value,
+        songnames: newplsongs,
+        songids: newplids,
+        update: u,
+        delete: d
+    }, { withCredentials: true })
+        .then(function (response) {
+        });
+    showplsongs(plid);
+    newplsongs = [];
+    newplids = [];
+}
 
 
 // function addtolist(sname, id) {
@@ -322,6 +323,8 @@ function showplsongs(plid) {
   document.getElementById("carousel2").remove();
   for (var i in result) {
     if (result[i]._id == plid) {
+      newplsongs=result[i].songnames;
+      newplids=result[i].songids;
       inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
       for (var j = 0; j < result[i].songnames.length; j++) {
         if (j % 3 == 0) {
@@ -331,10 +334,10 @@ function showplsongs(plid) {
           flag = 1;
         }
         inner += `<div class="col-sm-2" style="padding-top:1%">
-                <div class="card">
+                <div class="card" style="background-color:transparent;">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
                 onclick="play('`+ result[i].songids[j] + `','` + result[i].songnames[j] + `')">
-                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top" alt="..." />
+                <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                 <a>
                 <div class="mask d-flex justify-content-center align-items-center"
                 style="background-color: rgba(0, 0, 0, 0.45);">
@@ -344,9 +347,10 @@ function showplsongs(plid) {
                 </div>
                 </a>
                 </div>
-                <div class="card-body">
-                <h5 class="card-title">`+ result[i].songnames[j] + `</h5>
-                </div></div></div>`;
+
+                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;margin-bottom:0px;">`+ result[i].songnames[j] + `</h5>
+                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" onclick="removefrompl('`+plid+`','`+ result[i].songids[j] +`')">Remove</button>
+                </div></div>`;
         if (j % 3 == 2) {
           inner += `</div></div>`;
           flag = 0;
@@ -609,14 +613,14 @@ function playlists() {
                 <div class="row" id="pls0">
                   <div class="col-sm-3" style="padding-top: 1%"></div>
                   <div class="col-sm-2" style="padding-top: 1%">
-                    <div class="card">
+                    <div class="card" style="background-color:transparent;">
                       <div
                         class="bg-image hover-overlay ripple"
                         data-mdb-ripple-color="light"
                       >
                         <img
                           src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8"
-                          class="card-img-top"
+                          class="card-img-top rounded-bottom"
                           alt="..."
                         />
                         <a href="/newpldets">
@@ -640,9 +644,9 @@ function playlists() {
                           </div>
                         </a>
                       </div>
-                      <div class="card-body">
-                        <h5 class="card-title">New Playlist</h5>
-                      </div>
+
+                        <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">New Playlist</h5>
+
                     </div>
                   </div>
                 </div>
@@ -679,4 +683,16 @@ function playlists() {
         </div>
       </div>`;
   showpl();
+}
+
+function removefrompl(plid,songid){
+  console.log(newplids);
+  console.log(newplsongs);
+  console.log(plid);
+  console.log(songid);
+  var sidind = newplids.indexOf(songid.toString());
+  removeElement(newplsongs,sidind);
+  removeElement(newplids,sidind);
+  newplaylist(1,0,plid);
+  console.log("removing");
 }
