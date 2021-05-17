@@ -6,6 +6,7 @@ module.exports.paths = app => {
     app.get('/dashboard', controller.loadDash);
     app.get('/newSong',controller.loadnewSong);
     app.get('/library',controller.loadLibrary);
+    app.get('/newpldets',controller.loadnewpldets)
     
     app.get('/getPlaylists',controller.getPlaylists);
     app.get('/getSongs', controller.getSongs);
