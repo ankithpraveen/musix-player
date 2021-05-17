@@ -141,12 +141,25 @@ function seek(val) {
 
 
 var gotSongs = 0;
+var gotPlaylists = 0;
 var songs = null;
+var playlists = null;
 function getSongs() {
   if (!gotSongs) {
     axios.get('/getSongs').then((response) => {
       gotSongs = 1;
       songs = response.data;
+    });
+    getPlaylists();
+  }
+}
+
+function getPlaylists() {
+  if (!gotPlaylists) {
+    axios.get('/getPlaylists').then((response) => {
+      gotPlaylists = 1;
+      playlists = response.data;
+      console.log(playlists); 
     });
 
   }
@@ -190,7 +203,13 @@ function dynamic_search(event) {
       
 
                     <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ to_display[i].name + `</h5>
-
+                    <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
+                    aria-expanded="false">Add to Playlist</button>
+                    <ul class="dropdown-menu">`;
+        for (var i in playlists){
+          sugg.innerHTML+=`<li><a class="dropdown-item">`+i.playlistname+`</a></li>`;
+        }
+        sugg.innerHTML+=`</ul>
                 </div>
               </div>`;
       }
@@ -297,19 +316,19 @@ function showpl() {
 // }
 
 function newplaylist(u, d, plid) {
-    axios.post('/newPlaylist', {
-        //playlistname: document.getElementById('plname').value,
-        playlistid: plid,
-        songnames: newplsongs,
-        songids: newplids,
-        update: u,
-        delete: d
-    }, { withCredentials: true })
-        .then(function (response) {
-        });
-    showplsongs(plid);
-    newplsongs = [];
-    newplids = [];
+  axios.post('/newPlaylist', {
+    //playlistname: document.getElementById('plname').value,
+    playlistid: plid,
+    songnames: newplsongs,
+    songids: newplids,
+    update: u,
+    delete: d
+  }, { withCredentials: true })
+    .then(function (response) {
+    });
+  showplsongs(plid);
+  newplsongs = [];
+  newplids = [];
 }
 
 
@@ -324,8 +343,8 @@ function showplsongs(plid) {
   document.getElementById("carousel2").remove();
   for (var i in result) {
     if (result[i]._id == plid) {
-      newplsongs=result[i].songnames;
-      newplids=result[i].songids;
+      newplsongs = result[i].songnames;
+      newplids = result[i].songids;
       inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
       for (var j = 0; j < result[i].songnames.length; j++) {
         if (j % 3 == 0) {
@@ -350,7 +369,7 @@ function showplsongs(plid) {
                 </div>
 
                 <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;margin-bottom:0px;">`+ result[i].songnames[j] + `</h5>
-                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" onclick="removefrompl('`+plid+`','`+ result[i].songids[j] +`')">Remove</button>
+                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" onclick="removefrompl('`+ plid + `','` + result[i].songids[j] + `')">Remove</button>
                 </div></div>`;
         if (j % 3 == 2) {
           inner += `</div></div>`;
@@ -686,14 +705,14 @@ function playlists() {
   showpl();
 }
 
-function removefrompl(plid,songid){
-  console.log(newplids);
-  console.log(newplsongs);
+function removefrompl(plid, songid) {
   console.log(plid);
   console.log(songid);
   var sidind = newplids.indexOf(songid.toString());
-  newplsongs.splice(sidind,1);
-  newplids.splice(sidind,1);
-  newplaylist(1,0,plid);
+  newplsongs.splice(sidind, 1);
+  newplids.splice(sidind, 1);
+  console.log(newplids);
+  console.log(newplsongs);
+  newplaylist(1, 0, plid);
   console.log("removing");
 }

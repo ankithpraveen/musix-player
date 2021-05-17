@@ -6,6 +6,7 @@ const { MongoClient } = require('mongodb');
 var mongo = require('mongodb');
 const uri = "mongodb+srv://admin:admin@cluster0.wdbez.mongodb.net/test";
 const dbName = "test";
+const ObjectId = require('mongodb').ObjectId;
 
 //init gridfs
 let storage = new GridFsStorage({
@@ -198,6 +199,23 @@ module.exports.getSongs = (req, res) => {
         });
     });
 }
+module.exports.getPlaylists = (req, res) => {
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db(dbName);
+        db.collection("allplaylists").find({email:req.user.email}).toArray(function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            res.send(result);
+            client.close();
+        });
+    });
+}
+
+
 module.exports.getUploadedSongs = (req, res) => {
     MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
         if (err) {
@@ -232,7 +250,7 @@ module.exports.addNewPlaylist = (req, res) => {
         }
         const db = client.db(dbName);
         if (req.body.update) {
-            db.collection("allplaylists").updateOne({ email: req.user.email, _id: req.body.playlistid }, { $set: { songnames: req.body.songnames, songids: req.body.songids }}, function (err, res) {
+            db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: req.body.songnames, songids: req.body.songids }}, function (err, res) {
                 if (err) {
                     console.log(err);
                 }
@@ -241,7 +259,7 @@ module.exports.addNewPlaylist = (req, res) => {
             });
         }
         else if (req.body.delete) {
-            db.collection("allplaylists").deleteOne({ email: req.user.email, _id: req.body.playlistid}, function (err, res) {
+            db.collection("allplaylists").deleteOne({ email: req.user.email, _id: ObjectId(req.body.playlistid)}, function (err, res) {
                 if (err) {
                     console.log(err);
                 }
