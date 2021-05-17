@@ -22,6 +22,7 @@ var isPlaying = 0;
 var newplsongs = [];
 var newplids = [];
 var result = null;
+var pldropdown = '';
 
 document.addEventListener('DOMContentLoaded', function () {
   dur = document.getElementById("duration");
@@ -158,8 +159,7 @@ function getPlaylists() {
   if (!gotPlaylists) {
     axios.get('/getPlaylists').then((response) => {
       gotPlaylists = 1;
-      playlists = response.data;
-      console.log(playlists); 
+      playlists = response.data; 
     });
 
   }
@@ -187,6 +187,9 @@ function dynamic_search(event) {
       sugg.innerHTML = ""
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
+        for (var j in playlists){
+          pldropdown += `<li><a class="dropdown-item" onclick="addtopl('`+playlists[j]._id+`','`+to_display[i].id+`','`+to_display[i].name+`','`+playlists[j].songnames+`','`+playlists[j].songids.toString()+`')">`+playlists[j].playlistname+`</a></li>`;
+        }
         sugg.innerHTML = sugg.innerHTML + `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card" style="background-color:transparent;">
                   <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+ to_display[i].id + `','` + to_display[i].name + `')">
@@ -205,13 +208,13 @@ function dynamic_search(event) {
                     <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ to_display[i].name + `</h5>
                     <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                     aria-expanded="false">Add to Playlist</button>
-                    <ul class="dropdown-menu">`;
-        for (var j in playlists){
-          sugg.innerHTML+=`<li><a class="dropdown-item">`+playlists[j].playlistname+`</a></li>`;
-        }
-        sugg.innerHTML+=`</ul>
-                </div>
-              </div>`;
+                    <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/newpldets">New Playlist</a></li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>`+pldropdown+`</ul></div></div>`;
+                    pldropdown='';
+
       }
     }
   }
@@ -315,7 +318,7 @@ function showpl() {
 //     }
 // }
 
-function newplaylist(u, d, plid) {
+function newplaylist(u, d, plid,add) {
   axios.post('/newPlaylist', {
     //playlistname: document.getElementById('plname').value,
     playlistid: plid,
@@ -326,7 +329,10 @@ function newplaylist(u, d, plid) {
   }, { withCredentials: true })
     .then(function (response) {
     });
-  showplsongs(plid);
+  if (add){
+
+    showplsongs(plid);
+  }
   newplsongs = [];
   newplids = [];
 }
@@ -706,13 +712,18 @@ function lplaylists() {
 }
 
 function removefrompl(plid, songid) {
-  console.log(plid);
-  console.log(songid);
   var sidind = newplids.indexOf(songid.toString());
   newplsongs.splice(sidind, 1);
   newplids.splice(sidind, 1);
-  console.log(newplids);
-  console.log(newplsongs);
   newplaylist(1, 0, plid);
   console.log("removing");
+}
+
+function addtopl(plid, songid,songname,cursongnames,cursongids){
+  newplsongs = cursongnames.split(',');
+  newplids=cursongids.split(',');
+  newplsongs.push(songname);
+  newplids.push(songid);
+  newplaylist(1,0,plid,0);
+  console.log("adding to pl")
 }
