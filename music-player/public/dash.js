@@ -275,7 +275,14 @@ function showpl() {
                 </a>
                 </div>
 
-                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5></div></div>`;
+                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5>
+                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
+                aria-expanded="false" id="delpl">Delete</button>
+                <ul class="dropdown-menu" aris-labeled-by="delpl">
+                  <li><button class="dropdown-item text-body">Cancel</button></li>
+                  <li><button class="dropdown-item text-danger" onclick="removepl('`+ (response.data[i]._id).toString() + `')">Confirm</button></li>
+                </ul>
+                </div></div>`;
         pls.innerHTML += plshtml;
         plshtml = "";
       }
@@ -340,6 +347,7 @@ function newplaylist(u, d, plid, sid, sname, sdelete) {
     songname: sname,
     songid: sid,
     update: u,
+    delete:d,
     sdel: sdelete
   }, { withCredentials: true })
     .then(function (response) {
@@ -389,7 +397,12 @@ function showplsongs(plid) {
                 </div>
 
                 <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;margin-bottom:0px;">`+ result[i].songnames[j] + `</h5>
-                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" onclick="removefrompl('`+ plid + `','` + result[i].songids[j] + `')">Remove</button>
+                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
+                aria-expanded="false" id="remsongs">Remove</button>
+                <ul class="dropdown-menu">
+                <li><button class="dropdown-item text-body">Cancel</button></li>
+                <li><button class="dropdown-item text-danger" onclick="removefrompl('`+ plid + `','` + result[i].songids[j] + `')">Confirm</button></li>
+                </ul>
                 </div></div>`;
         if (j % 3 == 2) {
           inner += `</div></div>`;
@@ -734,4 +747,8 @@ function removefrompl(plid, songid) {
 function addtopl(plid, songid, songname) {
   newplaylist(1, 0, plid, songid.toString(), songname, 0);
   console.log("adding to pl");
+}
+
+function removepl(plid){
+  newplaylist(0,1,plid,'','',1);
 }
