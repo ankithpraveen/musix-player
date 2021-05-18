@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
       seekControl1.value = rate / 100;
       if (rate > 100) {
         isPlaying = 0;
+        playpauseswitch();
+        pausedAt = 0;
       }
       updatedur();
     }
@@ -72,7 +74,7 @@ function play(id, name) {
     audioContext = getAudioContext();
     firstLoad = 0;
   }
-  load = document.getElementById("load");
+  load = document.getElementById("playpause");
   load.innerHTML = `<div class="d-flex justify-content-center">
     <div class="spinner-border text-white" role="status">
       <span class="visually-hidden"></span>
@@ -93,7 +95,10 @@ function play(id, name) {
 
       source1.start();
       isPlaying = 1;
-      load.innerHTML = "";
+      playpauseswitch();
+      load.innerHTML = `<button onclick="pause()" class="btn btn-primary btn-floating bg-white">
+      <i class="fa fa-pause-circle fa-3x" style="color:#0f64f2"></i>
+    </button>`;
       document.getElementById("nplaying").innerHTML = name;
     });
   }, (error) => {
@@ -107,6 +112,14 @@ function pause() {
   pausedAt = Date.now() - startedAt;
   isPlaying = 0;
   playpauseswitch();
+
+}
+
+function stopprevsong(id,name){
+  if (source1 && isPlaying==1){
+    source1.stop();
+  }
+  play(id,name);
 }
 
 function resume() {
@@ -192,7 +205,7 @@ function dynamic_search(event) {
         }
         sugg.innerHTML = sugg.innerHTML + `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card" style="background-color:transparent;">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="play('`+ to_display[i].id + `','` + to_display[i].name + `')">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `');">
                     <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                     <a>
                       <div class="mask d-flex justify-content-center align-items-center"
