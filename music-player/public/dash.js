@@ -224,7 +224,7 @@ function dynamic_search(event) {
                     <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/newpldets">New Playlist</a></li>
                     <li>
-                      <hr class="dropdown-divider" />
+                    <hr class="dropdown-divider" style="margin-top:0px;margin-bottom:0px;"/>
                     </li>`+pldropdown+`</ul></div></div>`;
                     pldropdown='';
 
