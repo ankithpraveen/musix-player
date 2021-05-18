@@ -115,11 +115,11 @@ function pause() {
 
 }
 
-function stopprevsong(id,name){
-  if (source1 && isPlaying==1){
+function stopprevsong(id, name) {
+  if (source1 && isPlaying == 1) {
     source1.stop();
   }
-  play(id,name);
+  play(id, name);
 }
 
 function resume() {
@@ -171,8 +171,8 @@ function getSongs() {
 function getPlaylists() {
   if (!gotPlaylists) {
     axios.get('/getPlaylists').then((response) => {
-      gotPlaylists = 1;
-      playlists = response.data; 
+      //gotPlaylists = 1;
+      playlists = response.data;
     });
 
   }
@@ -197,11 +197,13 @@ function dynamic_search(event) {
           to_display.push({ name: songs[i].filename, id: songs[i]._id });
         }
       }
-      sugg.innerHTML = ""
+      sugg.innerHTML = "";
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
-        for (var j in playlists){
-          pldropdown += `<li><a class="dropdown-item" onclick="addtopl('`+playlists[j]._id+`','`+to_display[i].id+`','`+to_display[i].name+`','`+playlists[j].songnames+`','`+playlists[j].songids.toString()+`')">`+playlists[j].playlistname+`</a></li>`;
+        for (var j in playlists) {
+          if (playlists[j].playlistname != "MyUploadedSongs") {
+            pldropdown += `<li><a class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name+`')">` + playlists[j].playlistname + `</a></li>`;
+          }
         }
         sugg.innerHTML = sugg.innerHTML + `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card" style="background-color:transparent;">
@@ -225,8 +227,8 @@ function dynamic_search(event) {
                     <li><a class="dropdown-item" href="/newpldets">New Playlist</a></li>
                     <li>
                     <hr class="dropdown-divider" style="margin-top:0px;margin-bottom:0px;"/>
-                    </li>`+pldropdown+`</ul></div></div>`;
-                    pldropdown='';
+                    </li>`+ pldropdown + `</ul></div></div>`;
+        pldropdown = '';
 
       }
     }
@@ -331,21 +333,20 @@ function showpl() {
 //     }
 // }
 
-function newplaylist(u, d, plid,add) {
+function newplaylist(u, d, plid, sid, sname, sdelete) {
   axios.post('/newPlaylist', {
     //playlistname: document.getElementById('plname').value,
     playlistid: plid,
-    songnames: newplsongs,
-    songids: newplids,
+    songname: sname,
+    songid: sid,
     update: u,
-    delete: d
+    sdel: sdelete
   }, { withCredentials: true })
     .then(function (response) {
+      if(sdelete){
+        lplaylists();
+      }
     });
-  if (add){
-
-    showplsongs(plid);
-  }
   newplsongs = [];
   newplids = [];
 }
@@ -726,17 +727,11 @@ function lplaylists() {
 
 function removefrompl(plid, songid) {
   var sidind = newplids.indexOf(songid.toString());
-  newplsongs.splice(sidind, 1);
-  newplids.splice(sidind, 1);
-  newplaylist(1, 0, plid);
+  newplaylist(1, 0, plid, songid.toString(), newplsongs[sidind], 1);
   console.log("removing");
 }
 
-function addtopl(plid, songid,songname,cursongnames,cursongids){
-  newplsongs = cursongnames.split(',');
-  newplids=cursongids.split(',');
-  newplsongs.push(songname);
-  newplids.push(songid);
-  newplaylist(1,0,plid,0);
-  console.log("adding to pl")
+function addtopl(plid, songid, songname) {
+  newplaylist(1, 0, plid, songid.toString(), songname, 0);
+  console.log("adding to pl");
 }

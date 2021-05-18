@@ -34,33 +34,30 @@ storage.on('connection', (db) => {
 
 
 module.exports.loadnewSong = (req, res) => {
-    if (req.user)
-    {
-        res.render('newsong', {email:req.user.email});
+    if (req.user) {
+        res.render('newsong', { email: req.user.email });
     }
-    else{
+    else {
         res.redirect('/');
     }
-    
+
 };
 
 module.exports.loadLibrary = (req, res) => {
-    if (req.user)
-    {
-        res.render('library', {email:req.user.email});
+    if (req.user) {
+        res.render('library', { email: req.user.email });
     }
-    else{
+    else {
         res.redirect('/');
     }
-    
+
 };
 
 module.exports.loadDash = (req, res) => {
-    if (req.user)
-    {
-        res.render('dash', { email: req.user.email});
+    if (req.user) {
+        res.render('dash', { email: req.user.email });
     }
-    else{
+    else {
         res.redirect('/');
     }
 };
@@ -89,7 +86,7 @@ module.exports.uploadFile = (req, res) => {
         res.send("GTFO");
         return null;
     }
-    
+
     upload(req, res, (err) => {
         if (err) {
             console.log(err);
@@ -106,7 +103,7 @@ module.exports.uploadFile = (req, res) => {
                         console.log(err);
                     }
                     if (result.length === 0) {
-                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MyUploadedSongs", songnames: [req.body.song_name] ,songids:[newsongid] }, function (err, res) {
+                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MyUploadedSongs", songnames: [req.body.song_name], songids: [newsongid] }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -119,7 +116,7 @@ module.exports.uploadFile = (req, res) => {
                         var temp2 = result[0].songids;
                         temp1.push(req.body.song_name);
                         temp2.push(newsongid);
-                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MyUploadedSongs" }, { $set: { songnames: temp1,songids: temp2 } }, function (err, res) {
+                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MyUploadedSongs" }, { $set: { songnames: temp1, songids: temp2 } }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -139,7 +136,7 @@ module.exports.uploadFile = (req, res) => {
 module.exports.getFile = (req, res) => {
     //Accepting user input directly is very insecure and should 
     //never be allowed in a production app. Sanitize the input.
-    if (!req.isAuthenticated()){
+    if (!req.isAuthenticated()) {
         res.send("GTFO");
         return null;
     }
@@ -205,7 +202,7 @@ module.exports.getPlaylists = (req, res) => {
             console.log(err);
         }
         const db = client.db(dbName);
-        db.collection("allplaylists").find({email:req.user.email}).toArray(function (err, result) {
+        db.collection("allplaylists").find({ email: req.user.email }).toArray(function (err, result) {
             if (err) {
                 console.log(err);
             }
@@ -222,7 +219,7 @@ module.exports.getUploadedSongs = (req, res) => {
             console.log(err);
         }
         const db = client.db(dbName);
-        db.collection("allplaylists").find({email:req.user.email,playlistname:"MyUploadedSongs"}).toArray(function (err, result) {
+        db.collection("allplaylists").find({ email: req.user.email, playlistname: "MyUploadedSongs" }).toArray(function (err, result) {
             if (err) {
                 console.log(err);
             }
@@ -233,12 +230,11 @@ module.exports.getUploadedSongs = (req, res) => {
 }
 
 module.exports.loaduploadedsongs = (req, res) => {
-    
-    if (req.user)
-    {
-        res.render('newsong', {email:req.user.email});
+
+    if (req.user) {
+        res.render('newsong', { email: req.user.email });
     }
-    else{
+    else {
         res.redirect('/');
     }
 };
@@ -250,29 +246,48 @@ module.exports.addNewPlaylist = (req, res) => {
         }
         const db = client.db(dbName);
         if (req.body.update) {
-            db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: req.body.songnames, songids: req.body.songids }}, function (err, res) {
+            db.collection("allplaylists").find({ email: req.user.email, _id: ObjectId(req.body.playlistid) }).toArray(function (err, result) {
                 if (err) {
                     console.log(err);
                 }
-                console.log("1 document updated");
-                client.close();
+                var x = result[0].songnames;
+                var y = result[0].songids;
+                if (req.body.sdel) {
+                    var sidind = y.indexOf(req.body.songid.toString());
+                    x.splice(sidind, 1);
+                    y.splice(sidind, 1);
+                }
+                else{
+                    x.push(req.body.songname);
+                    y.push(req.body.songid);
+                }
+                db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: x, songids:y } }, function (err, resl) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.sendStatus(200);
+                    console.log("1 document updated");
+                    client.close();
+                });
             });
         }
         else if (req.body.delete) {
-            db.collection("allplaylists").deleteOne({ email: req.user.email, _id: ObjectId(req.body.playlistid)}, function (err, res) {
+            db.collection("allplaylists").deleteOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, function (err, resl) {
                 if (err) {
                     console.log(err);
                 }
                 console.log("1 document deleted");
+                res.sendStatus(200);
                 client.close();
             });
         }
         else {
-            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids}, function(err, res) {
-                if (err){
+            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids }, function (err, resl) {
+                if (err) {
                     console.log(err);
                 }
                 console.log("1 document inserted");
+                res.sendStatus(200);
                 client.close();
             });
         }
@@ -280,11 +295,10 @@ module.exports.addNewPlaylist = (req, res) => {
 }
 
 module.exports.loadnewpldets = (req, res) => {
-    if (req.user)
-    {
-        res.render('newpldets', { email: req.user.email});
+    if (req.user) {
+        res.render('newpldets', { email: req.user.email });
     }
-    else{
+    else {
         res.redirect('/');
     }
 };
