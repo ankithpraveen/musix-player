@@ -163,7 +163,7 @@ function getSongs() {
     axios.get('/getSongs').then((response) => {
       gotSongs = 1;
       songs = response.data;
-    });
+    }).then((response) =>{dynamic_search({keyCode:8})});
     getPlaylists();
   }
 }
@@ -180,6 +180,8 @@ function getPlaylists() {
 
 function dynamic_search(event) {
   if (gotSongs) {
+    var flag = 0;
+    var temp = "";
     var x = event.keyCode;
     var sugg = document.getElementById("sugg");
     if (x >= 32 || x === 8) {
@@ -197,15 +199,26 @@ function dynamic_search(event) {
           to_display.push({ name: songs[i].filename, id: songs[i]._id });
         }
       }
+      console.log(to_display.length);
       sugg.innerHTML = "";
+      if (to_display.length){
+        temp = `<div id="carousel"><h4 style="color: white">Search Results</h4><div id="carouselExampleControls" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car">`;
+      }
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
+        temp+=``;
         for (var j in playlists) {
           if (playlists[j].playlistname != "MyUploadedSongs") {
             pldropdown += `<li><a class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name+`')">` + playlists[j].playlistname + `</a></li>`;
           }
         }
-        sugg.innerHTML = sugg.innerHTML + `<div class="col-sm-2" style="padding-top:10%">
+        if (i % 5 == 0) {
+          var x = "";
+          if (i == 0) { x = "active"; }
+          temp += `<div class="carousel-item ` + x + ` "><div class="row"><div class="col-sm-1" style="padding-top: 1%"></div>`;
+          flag = 1;
+        }
+        temp += `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card" style="background-color:transparent;">
                   <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `');">
                     <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
@@ -228,9 +241,27 @@ function dynamic_search(event) {
                     <li>
                     <hr class="dropdown-divider" style="margin-top:0px;margin-bottom:0px;"/>
                     </li>`+ pldropdown + `</ul></div></div>`;
+        if (i % 5 == 4) {
+          temp += `</div></div>`;
+          flag = 0;
+        }
         pldropdown = '';
-
       }
+      if (flag) { temp += `</div></div>`; }
+      if (to_display.length) {
+        temp += `</div>
+              <button class="carousel-control-prev"  type="button"  data-mdb-target="#carouselExampleControls"  data-mdb-slide="prev" style="width:10%;padding-top:3%;">
+              <span  class="carousel-control-prev-icon"   aria-hidden="true" ></span>
+              <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleControls"   data-mdb-slide="next"  style="width:10%;padding-top:3%;" >
+              <span   class="carousel-control-next-icon"  aria-hidden="true"  ></span>
+              <span class="visually-hidden">Next</span>
+              </button>
+              </div>
+              </div>`;
+      }
+      sugg.innerHTML=temp;
     }
   }
 }
@@ -308,6 +339,12 @@ function showpl() {
                 </div>
 
                 <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5>
+                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
+                aria-expanded="false" id="delpl">Delete</button>
+                <ul class="dropdown-menu" aris-labeled-by="delpl">
+                  <li><button class="dropdown-item text-body">Cancel</button></li>
+                  <li><button class="dropdown-item text-danger" onclick="removepl('`+ (response.data[i]._id).toString() + `')">Confirm</button></li>
+                </ul>
                 </div></div>`;
         if (i % 3 == 1) {
           plshtml += `</div></div>`;
