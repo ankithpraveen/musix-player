@@ -98,11 +98,14 @@ margin-bottom:5%;
             
             <form>
             <div class="form-outline mb-4">
-              <input type="text" id="s_name" style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;" placeholder="Song Name" class="">
+              <input type="text" id="s_name" style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;" placeholder="Song Name" class="" required>
+            </div>
+            <div class="form-outline mb-4">
+              <input type="text" id="a_name" style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;" placeholder="Artist Name" class="" required>
             </div>
             <div class="form-outline mb-4">
 
-              <input type="file" id="file1" class="text-black form-control"  style="border: 1px solid black; width:47vw; padding-left:5px; background-color: white; color: black;"/>
+              <input type="file" id="file1" class="text-black form-control"  style="border: 1px solid black; width:47vw; padding-left:5px; background-color: white; color: black;" required>
 
             </div>
               <button type="button" class="btn btn-primary btn-block" onclick="upload()">Upload</button>

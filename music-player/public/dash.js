@@ -233,7 +233,9 @@ function dynamic_search(event) {
                   </div>
       
 
-                    <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ to_display[i].name + `</h5>
+                  <blockquote style="padding-top:7px;padding-left:5px;margin-bottom:3px;" class="blockquote text-white">`+ to_display[i].name + `</blockquote><figcaption class="blockquote-footer" style="margin-bottom:3px;padding-top:10px;">
+                  <cite title="Source Title">Artist</cite>
+                </figcaption>
                     <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                     aria-expanded="false">Add to Playlist</button>
                     <ul class="dropdown-menu">
@@ -432,8 +434,9 @@ function showplsongs(plid) {
                 </div>
                 </a>
                 </div>
-
-                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;margin-bottom:0px;">`+ result[i].songnames[j] + `</h5>
+                <blockquote style="padding-top:7px;padding-left:5px;margin-bottom:3px;" class="blockquote text-white">`+ result[i].songnames[j] + `</blockquote><figcaption class="blockquote-footer" style="margin-bottom:3px;padding-top:10px;">
+                  <cite title="Source Title">Artist</cite>
+                </figcaption>
                 <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                 aria-expanded="false" id="remsongs">Remove</button>
                 <ul class="dropdown-menu">
