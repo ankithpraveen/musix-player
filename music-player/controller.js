@@ -16,8 +16,9 @@ let storage = new GridFsStorage({
 
             bucketName: 'fs',
             //Setting collection name, default name is fs      
-            filename: req.body.song_name
-            //Setting file name to original name of file    
+            filename: req.body.song_name,
+            //Setting file name to original name of file 
+            artistname: req.body.artist_name  
         }
     }
 });
@@ -103,7 +104,7 @@ module.exports.uploadFile = (req, res) => {
                         console.log(err);
                     }
                     if (result.length === 0) {
-                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MyUploadedSongs", songnames: [req.body.song_name], songids: [newsongid] }, function (err, res) {
+                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MyUploadedSongs", songnames: [req.body.song_name], songids: [newsongid], artistnames:[req.body.artist_name] }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -114,9 +115,11 @@ module.exports.uploadFile = (req, res) => {
                     else {
                         var temp1 = result[0].songnames;
                         var temp2 = result[0].songids;
+                        var temp3 = resylt[0].artistnames;
                         temp1.push(req.body.song_name);
                         temp2.push(newsongid);
-                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MyUploadedSongs" }, { $set: { songnames: temp1, songids: temp2 } }, function (err, res) {
+                        temp3.push(req.body.artist_name);
+                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MyUploadedSongs" }, { $set: { songnames: temp1, songids: temp2 , artistnames: temp3} }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -252,16 +255,19 @@ module.exports.addNewPlaylist = (req, res) => {
                 }
                 var x = result[0].songnames;
                 var y = result[0].songids;
+                var z = result[0].artistnames;
                 if (req.body.sdel) {
                     var sidind = y.indexOf(req.body.songid.toString());
                     x.splice(sidind, 1);
                     y.splice(sidind, 1);
+                    z.splice(sidind, 1);
                 }
                 else{
                     x.push(req.body.songname);
                     y.push(req.body.songid);
+                    z.push(req.body.artistname);
                 }
-                db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: x, songids:y } }, function (err, resl) {
+                db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: x, songids:y, artistnames: z } }, function (err, resl) {
                     if (err) {
                         console.log(err);
                     }
@@ -282,7 +288,7 @@ module.exports.addNewPlaylist = (req, res) => {
             });
         }
         else {
-            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids }, function (err, resl) {
+            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids, artistnames: req.body.artistname }, function (err, resl) {
                 if (err) {
                     console.log(err);
                 }
