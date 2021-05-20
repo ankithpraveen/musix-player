@@ -19,8 +19,11 @@ var playbackTime = null;
 var rate = null;
 var isPlaying = 0;
 
-var newplsongs = [];
-var newplids = [];
+var queue = 0;
+var currentindex = 0;
+
+var newplsongs = 0;
+var newplids = 0;
 var result = null;
 var pldropdown = '';
 
@@ -48,9 +51,24 @@ document.addEventListener('DOMContentLoaded', function () {
       rate = parseInt((playbackTime * 100) / duration, 10);
       seekControl1.value = rate / 100;
       if (rate > 100) {
-        isPlaying = 0;
-        playpauseswitch();
-        pausedAt = 0;
+        if(!queue==0){
+          if(currentindex<queue[2]){
+            play(queue[0][currentindex],queue[1][currentindex]);
+            source1.stop();
+            currentindex +=1;
+            isPlaying=0;
+          }
+          else{
+            isPlaying = 0;
+            playpauseswitch();
+            pausedAt = 0;
+          }
+        }
+        else{
+          isPlaying = 0;
+          playpauseswitch();
+          pausedAt = 0;
+        }
       }
       updatedur();
     }
@@ -68,6 +86,7 @@ function updatedur() {
   }
   dur.innerHTML = minutes + ":" + seconds;
 }
+
 function play(id, name) {
   document.getElementById("footer").style.display = "block";
   if (firstLoad) {
@@ -106,6 +125,19 @@ function play(id, name) {
   });
 }
 
+function prev(){
+  if (currentindex > 1) {
+    stopprevsong(queue[0][currentindex-2], queue[1][currentindex-2],0);
+    currentindex -= 1;
+  }
+}
+
+function next() {
+  if (currentindex < queue[2]) {
+    stopprevsong(queue[0][currentindex], queue[1][currentindex],0);
+    currentindex += 1;
+  }
+}
 
 function pause() {
   source1.stop();
@@ -115,11 +147,21 @@ function pause() {
 
 }
 
-function stopprevsong(id, name) {
+function stopprevsong(id, name, news) {
   if (source1 && isPlaying == 1) {
     source1.stop();
+    isPlaying=0;
   }
-  play(id, name);
+  if (newplids==0){
+    play(id, name);
+  }
+  else{
+    if(news){
+      queue = [newplids,newplsongs,newplids.length];
+      currentindex = newplids[0].indexOf(id) + 1;
+    }
+    play(id,name);
+  }
 }
 
 function resume() {
@@ -199,7 +241,6 @@ function dynamic_search(event) {
           to_display.push({ name: songs[i].filename, id: songs[i]._id });
         }
       }
-      console.log(to_display.length);
       sugg.innerHTML = "";
       if (to_display.length){
         temp = `<div id="carousel"><h4 style="color: white">Search Results</h4><div id="carouselExampleControls" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car">`;
@@ -220,7 +261,7 @@ function dynamic_search(event) {
         }
         temp += `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card" style="background-color:transparent;">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `');">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `',1);">
                     <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                     <a>
                       <div class="mask d-flex justify-content-center align-items-center"
@@ -394,8 +435,8 @@ function newplaylist(u, d, plid, sid, sname, sdelete) {
         lplaylists();
       }
     });
-  newplsongs = [];
-  newplids = [];
+  newplsongs = 0;
+  newplids = 0;
 }
 
 
@@ -423,7 +464,7 @@ function showplsongs(plid) {
         inner += `<div class="col-sm-2" style="padding-top:1%">
                 <div class="card" style="background-color:transparent;">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light"
-                onclick="play('`+ result[i].songids[j] + `','` + result[i].songnames[j] + `')">
+                onclick="stopprevsong('`+ result[i].songids[j] + `','` + result[i].songnames[j] + `',1)">
                 <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                 <a>
                 <div class="mask d-flex justify-content-center align-items-center"
@@ -468,6 +509,8 @@ function showplsongs(plid) {
 }
 
 function dash() {
+  newplsongs=[];
+  newplsids=[];
   document.getElementById("main").innerHTML = `<!-- Navbar -->
         <!-- Container wrapper -->
         <div
