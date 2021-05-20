@@ -1,5 +1,6 @@
 var newplsongs = [];
 var newplids = [];
+var newplartists = [];
 var tsugg = [];
 var tadded = [];
 
@@ -24,6 +25,7 @@ function newplaylist(u, d) {
     playlistname: document.getElementById('plname').value,
     songnames: newplsongs,
     songids: newplids,
+    artistnames:newplartists,
     update: u,
     delete: d
   }, { withCredentials: true })
@@ -31,6 +33,7 @@ function newplaylist(u, d) {
     })
   newplsongs = [];
   newplids = [];
+  newplartists = [];
 }
 
 
@@ -38,6 +41,7 @@ function addtolist(event) {
   if (!newplids.includes(event.id)) {
     newplsongs.push(event.name);
     newplids.push(event.id);
+    newplartists.push(event.value);
     var tadded = document.getElementById("tadded");
     event.parentNode.parentNode.parentNode.removeChild(event.parentNode.parentNode);
     tadded.innerHTML += `<tr>
@@ -48,10 +52,10 @@ function addtolist(event) {
       </p>
     </blockquote>
     <figcaption class="blockquote-footer">
-      <cite title="Source Title">Artist</cite>
+      <cite title="Source Title"> `+event.value+`</cite>
     </figcaption>
     </figure></th>
-    <td style="text-align:right;"><button type="button" class="btn btn-primary btn-floating bg-white" id="`+ event.id + `" onclick="removefromlist(this)" name="` + event.name + `">
+    <td style="text-align:right;" ><button type="button" class="btn btn-primary btn-floating bg-white" id="`+ event.id + `" onclick="removefromlist(this)" name="` + event.name + `" value="`+event.parentNode.name+`">
         <i class="fa fa-minus-circle fa-3x" style="color:#0f64f2"></i>
     </button></td>
     </tr>`;
@@ -73,10 +77,11 @@ function dynamic_search(event) {
       search_text = search_text.toLowerCase();
       var to_display = [];
       for (var i = 0; i < songs.length; i++) {
-        if (songs[i].filename.slice(0, slength) == search_text) {
-          to_display.push({ name: songs[i].filename, id: songs[i]._id });
+        if (songs[i].filename.slice(0, slength).toLowerCase() == search_text) {
+          to_display.push({ name: songs[i].filename, id: songs[i]._id ,a_name:songs[i].metadata.artistname});
         }
       }
+      console.log(to_display);
       tsugg.innerHTML = ""
       for (var i in to_display) {
         if (!newplids.includes(to_display[i].id)) {
@@ -88,10 +93,10 @@ function dynamic_search(event) {
                   </p>
                 </blockquote>
                 <figcaption class="blockquote-footer">
-                  <cite title="Source Title">Artist</cite>
+                  <cite title="Source Title">`+to_display[i].a_name+`</cite>
                 </figcaption>
               </figure></th>
-                <td style="text-align:right;"><button type="button" class="btn btn-primary btn-floating bg-white" id="`+ to_display[i].id + `" onclick="addtolist(this)" name="` + to_display[i].name + `">
+                <td style="text-align:right;"><button type="button" class="btn btn-primary btn-floating bg-white" id="`+ to_display[i].id + `" onclick="addtolist(this)" name="` + to_display[i].name + `" artist="`+to_display[i].a_name+`"  value="`+to_display[i].a_name+`">
                     <i class="fa fa-plus-circle fa-3x" style="color:#0f64f2"></i>
                 </button></td>
             </tr>`;
@@ -105,6 +110,8 @@ function dynamic_search(event) {
 function removefromlist(event) {
   newplsongs = newplsongs.filter(e => e !== event.name);
   newplids = newplids.filter(e => e !== event.id);
+  newplartists = newplartists.filter(e => e !== event.artist);
+
   event.parentNode.parentNode.parentNode.removeChild(event.parentNode.parentNode);
   dynamic_search({keyCode:8});
 }
