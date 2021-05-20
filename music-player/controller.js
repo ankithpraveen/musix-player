@@ -18,7 +18,7 @@ let storage = new GridFsStorage({
             //Setting collection name, default name is fs      
             filename: req.body.song_name,
             //Setting file name to original name of file 
-            artistname: req.body.artist_name  
+            metadata: {artistname:req.body.artist_name  }
         }
     }
 });
@@ -115,7 +115,7 @@ module.exports.uploadFile = (req, res) => {
                     else {
                         var temp1 = result[0].songnames;
                         var temp2 = result[0].songids;
-                        var temp3 = resylt[0].artistnames;
+                        var temp3 = result[0].artistnames;
                         temp1.push(req.body.song_name);
                         temp2.push(newsongid);
                         temp3.push(req.body.artist_name);
@@ -288,7 +288,7 @@ module.exports.addNewPlaylist = (req, res) => {
             });
         }
         else {
-            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids, artistnames: req.body.artistname }, function (err, resl) {
+            db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: req.body.playlistname, songnames: req.body.songnames, songids: req.body.songids, artistnames: req.body.artistnames }, function (err, resl) {
                 if (err) {
                     console.log(err);
                 }

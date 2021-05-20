@@ -51,20 +51,20 @@ document.addEventListener('DOMContentLoaded', function () {
       rate = parseInt((playbackTime * 100) / duration, 10);
       seekControl1.value = rate / 100;
       if (rate > 100) {
-        if(!queue==0){
-          if(currentindex<queue[2]){
-            play(queue[0][currentindex],queue[1][currentindex]);
+        if (!queue == 0) {
+          if (currentindex < queue[2]) {
+            play(queue[0][currentindex], queue[1][currentindex]);
             source1.stop();
-            currentindex +=1;
-            isPlaying=0;
+            currentindex += 1;
+            isPlaying = 0;
           }
-          else{
+          else {
             isPlaying = 0;
             playpauseswitch();
             pausedAt = 0;
           }
         }
-        else{
+        else {
           isPlaying = 0;
           playpauseswitch();
           pausedAt = 0;
@@ -125,16 +125,16 @@ function play(id, name) {
   });
 }
 
-function prev(){
+function prev() {
   if (currentindex > 1) {
-    stopprevsong(queue[0][currentindex-2], queue[1][currentindex-2],0);
+    stopprevsong(queue[0][currentindex - 2], queue[1][currentindex - 2], 0);
     currentindex -= 1;
   }
 }
 
 function next() {
   if (currentindex < queue[2]) {
-    stopprevsong(queue[0][currentindex], queue[1][currentindex],0);
+    stopprevsong(queue[0][currentindex], queue[1][currentindex], 0);
     currentindex += 1;
   }
 }
@@ -150,17 +150,21 @@ function pause() {
 function stopprevsong(id, name, news) {
   if (source1 && isPlaying == 1) {
     source1.stop();
-    isPlaying=0;
+    isPlaying = 0;
   }
-  if (newplids==0){
+  if (newplids == 0) {
     play(id, name);
   }
-  else{
-    if(news){
-      queue = [newplids,newplsongs,newplids.length];
+  else {
+    if (news) {
+      queue = [newplids, newplsongs, newplids.length];
       currentindex = newplids[0].indexOf(id) + 1;
     }
-    play(id,name);
+    else {
+      queue = 0;
+      currentindex = 0;
+    }
+    play(id, name);
   }
 }
 
@@ -205,7 +209,7 @@ function getSongs() {
     axios.get('/getSongs').then((response) => {
       gotSongs = 1;
       songs = response.data;
-    }).then((response) =>{dynamic_search({keyCode:8})});
+    }).then((response) => { dynamic_search({ keyCode: 8 }) });
     getPlaylists();
   }
 }
@@ -237,20 +241,21 @@ function dynamic_search(event) {
       search_text = search_text.toLowerCase();
       var to_display = [];
       for (var i = 0; i < songs.length; i++) {
-        if (songs[i].filename.slice(0, slength) == search_text) {
-          to_display.push({ name: songs[i].filename, id: songs[i]._id });
+        if (songs[i].filename.slice(0, slength).toLowerCase() == search_text) {
+          to_display.push({ name: songs[i].filename, id: songs[i]._id, artistname: songs[i].metadata.artistname });
         }
       }
+      console.log(to_display);
       sugg.innerHTML = "";
-      if (to_display.length){
+      if (to_display.length) {
         temp = `<div id="carousel"><h4 style="color: white">Search Results</h4><div id="carouselExampleControls" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car">`;
       }
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
-        temp+=``;
+        temp += ``;
         for (var j in playlists) {
           if (playlists[j].playlistname != "MyUploadedSongs") {
-            pldropdown += `<li><a class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name+`')">` + playlists[j].playlistname + `</a></li>`;
+            pldropdown += `<li><a class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name + `')">` + playlists[j].playlistname + `</a></li>`;
           }
         }
         if (i % 5 == 0) {
@@ -261,7 +266,7 @@ function dynamic_search(event) {
         }
         temp += `<div class="col-sm-2" style="padding-top:10%">
                 <div class="card" style="background-color:transparent;">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `',1);">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `',0);">
                     <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
                     <a>
                       <div class="mask d-flex justify-content-center align-items-center"
@@ -275,7 +280,7 @@ function dynamic_search(event) {
       
 
                   <blockquote style="padding-top:7px;padding-left:5px;margin-bottom:3px;" class="blockquote text-white">`+ to_display[i].name + `</blockquote><figcaption class="blockquote-footer" style="margin-bottom:3px;padding-top:10px;">
-                  <cite title="Source Title">Artist</cite>
+                  <cite title="Source Title">`+ to_display[i].artistname + `</cite>
                 </figcaption>
                     <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                     aria-expanded="false">Add to Playlist</button>
@@ -304,7 +309,7 @@ function dynamic_search(event) {
               </div>
               </div>`;
       }
-      sugg.innerHTML=temp;
+      sugg.innerHTML = temp;
     }
   }
 }
@@ -349,14 +354,16 @@ function showpl() {
                 </a>
                 </div>
 
-                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5>
-                <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
+                <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5>`;
+        if (response.data[i].playlistname != "MyUploadedSongs") {
+          plshtml += `<button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                 aria-expanded="false" id="delpl">Delete</button>
                 <ul class="dropdown-menu" aris-labeled-by="delpl">
                   <li><button class="dropdown-item text-body">Cancel</button></li>
                   <li><button class="dropdown-item text-danger" onclick="removepl('`+ (response.data[i]._id).toString() + `')">Confirm</button></li>
-                </ul>
-                </div></div>`;
+                </ul>`;
+        }
+        plshtml += `</div></div>`;
         pls.innerHTML += plshtml;
         plshtml = "";
       }
@@ -427,11 +434,11 @@ function newplaylist(u, d, plid, sid, sname, sdelete) {
     songname: sname,
     songid: sid,
     update: u,
-    delete:d,
+    delete: d,
     sdel: sdelete
   }, { withCredentials: true })
     .then(function (response) {
-      if(sdelete){
+      if (sdelete) {
         lplaylists();
       }
     });
@@ -453,6 +460,7 @@ function showplsongs(plid) {
     if (result[i]._id == plid) {
       newplsongs = result[i].songnames;
       newplids = result[i].songids;
+      newplartists = result[i].artistnames;
       inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
       for (var j = 0; j < result[i].songnames.length; j++) {
         if (j % 3 == 0) {
@@ -476,7 +484,7 @@ function showplsongs(plid) {
                 </a>
                 </div>
                 <blockquote style="padding-top:7px;padding-left:5px;margin-bottom:3px;" class="blockquote text-white">`+ result[i].songnames[j] + `</blockquote><figcaption class="blockquote-footer" style="margin-bottom:3px;padding-top:10px;">
-                  <cite title="Source Title">Artist</cite>
+                  <cite title="Source Title">`+ result[i].artistnames[j] + `</cite>
                 </figcaption>
                 <button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                 aria-expanded="false" id="remsongs">Remove</button>
@@ -509,8 +517,9 @@ function showplsongs(plid) {
 }
 
 function dash() {
-  newplsongs=[];
-  newplsids=[];
+  newplsongs = [];
+  newplsids = [];
+  newplartists = [];
   document.getElementById("main").innerHTML = `<!-- Navbar -->
         <!-- Container wrapper -->
         <div
@@ -635,6 +644,8 @@ function dash() {
         </div>
 
         <br /><br />`;
+  let stateObj = { id: "100" };
+  window.history.replaceState(stateObj, "dashboard", "/dashboard");
 }
 
 
@@ -819,6 +830,8 @@ function lplaylists() {
         </div>
       </div>`;
   showpl();
+  let stateObj = { id: "100" };
+  window.history.replaceState(stateObj, "library", "/library");
 }
 
 function removefrompl(plid, songid) {
@@ -832,6 +845,6 @@ function addtopl(plid, songid, songname) {
   console.log("adding to pl");
 }
 
-function removepl(plid){
-  newplaylist(0,1,plid,'','',1);
+function removepl(plid) {
+  newplaylist(0, 1, plid, '', '', 1);
 }
