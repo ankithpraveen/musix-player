@@ -644,6 +644,7 @@ function dash() {
         </div>
 
         <br /><br />`;
+  document.getElementById("bg").style.height="120vh";
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
 }
@@ -829,6 +830,7 @@ function lplaylists() {
           <div id="carousel2"></div>
         </div>
       </div>`;
+  document.getElementById("bg").style.height="120vh";
   showpl();
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "library", "/library");
