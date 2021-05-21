@@ -115,10 +115,10 @@
               aria-labelledby="navbarDropdownMenuLink"
             >
               <li>
-                <a class="dropdown-item" href="#">My profile</a>
+                <span class="dropdown-item-text" href="#"><%=name%></span>
               </li>
               <li>
-                <a class="dropdown-item" href="#">Settings</a>
+                <span class="dropdown-item-text" href="#"><%=email%></span>
               </li>
               <li>
                 <a class="dropdown-item" href="/logout">Logout</a>
@@ -138,6 +138,12 @@
 
       <br /><br />
     </div>
+    <p id="email" hidden>
+      <%=email%>
+  </p>
+    <p id="name" hidden>
+      <%=name%>
+  </p>
   </body>
 
   <footer
