@@ -258,7 +258,7 @@ function dynamic_search(event) {
         temp += ``;
         for (var j in playlists) {
           if (playlists[j].playlistname != "MyUploadedSongs") {
-            pldropdown += `<li><a class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name + `')">` + playlists[j].playlistname + `</a></li>`;
+            pldropdown += `<li><button class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name + `')">` + playlists[j].playlistname + `</button></li>`;
           }
         }
         if (i % 5 == 0) {
@@ -288,7 +288,7 @@ function dynamic_search(event) {
                     <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                     aria-expanded="false">Add to Playlist</button>
                     <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/newpldets">New Playlist</a></li>
+                    <li><button class="dropdown-item" href="/newpldets">New Playlist</button></li>
                     <li>
                     <hr class="dropdown-divider" style="margin-top:0px;margin-bottom:0px;"/>
                     </li>`+ pldropdown + `</ul></div></div>`;
@@ -623,11 +623,11 @@ function dash() {
                 aria-labelledby="navbarDropdownMenuLink"
                 >
                 <li>
-                    <a class="dropdown-item" href="#">My profile</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="#">Settings</a>
-                </li>
+                <span class="dropdown-item-text" href="#">`+document.getElementById("name").innerHTML+`</span>
+              </li>
+              <li>
+                <span class="dropdown-item-text" href="#">`+document.getElementById("email").innerHTML+`</span>
+              </li>
                 <li>
                     <a class="dropdown-item" href="/logout">Logout</a>
                 </li>
@@ -733,12 +733,12 @@ function lplaylists() {
               class="dropdown-menu dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
             >
-              <li>
-                <a class="dropdown-item" href="#">My profile</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Settings</a>
-              </li>
+            <li>
+            <span class="dropdown-item-text" href="#">`+document.getElementById("name").innerHTML+`</span>
+          </li>
+          <li>
+            <span class="dropdown-item-text" href="#">`+document.getElementById("email").innerHTML+`</span>
+          </li>
               <li>
                 <a class="dropdown-item" href="/logout">Logout</a>
               </li>

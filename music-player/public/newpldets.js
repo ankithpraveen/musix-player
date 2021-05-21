@@ -15,7 +15,7 @@ function getSongs() {
     axios.get('/getSongs').then((response) => {
       gotSongs = 1;
       songs = response.data;
-    });
+    }).then((response) => { dynamic_search({ keyCode: 8 }) });
 
   }
 }

@@ -36,7 +36,7 @@ storage.on('connection', (db) => {
 
 module.exports.loadnewSong = (req, res) => {
     if (req.user) {
-        res.render('newsong', { email: req.user.email });
+        res.render('newsong', { email: req.user.email , name:req.user.name});
     }
     else {
         res.redirect('/');
@@ -46,7 +46,7 @@ module.exports.loadnewSong = (req, res) => {
 
 module.exports.loadLibrary = (req, res) => {
     if (req.user) {
-        res.render('library', { email: req.user.email });
+        res.render('library', { email: req.user.email , name:req.user.name});
     }
     else {
         res.redirect('/');
@@ -56,7 +56,7 @@ module.exports.loadLibrary = (req, res) => {
 
 module.exports.loadDash = (req, res) => {
     if (req.user) {
-        res.render('dash', { email: req.user.email });
+        res.render('dash', { email: req.user.email , name:req.user.name});
     }
     else {
         res.redirect('/');
@@ -235,7 +235,7 @@ module.exports.getUploadedSongs = (req, res) => {
 module.exports.loaduploadedsongs = (req, res) => {
 
     if (req.user) {
-        res.render('newsong', { email: req.user.email });
+        res.render('newsong', { email: req.user.email , name:req.user.name});
     }
     else {
         res.redirect('/');
@@ -302,7 +302,7 @@ module.exports.addNewPlaylist = (req, res) => {
 
 module.exports.loadnewpldets = (req, res) => {
     if (req.user) {
-        res.render('newpldets', { email: req.user.email });
+        res.render('newpldets', { email: req.user.email , name:req.user.name});
     }
     else {
         res.redirect('/');
