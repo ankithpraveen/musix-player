@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="./mdb/js/mdb.min.js"></script>
-  <link href="./mdb/css/mdb.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <script src="newsong.js"></script>
-  <head><title id="title">Upload New Song</title></head>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./mdb/js/mdb.min.js"></script>
+<link href="./mdb/css/mdb.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<script src="newsong.js"></script>
+
+<head>
+  <title id="title">Upload New Song</title>
+</head>
+
 <body style="height: 100vh" id="bg">
 
   <div style="
@@ -15,106 +19,119 @@
       ">
 
 
-  <!-- Navbar -->
-  <!-- Container wrapper -->
+    <!-- Navbar -->
+    <!-- Container wrapper -->
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
-    <div class="container-fluid">
-      <!-- Toggle button -->
-      <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fa fa-bars"></i>
-      </button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+      <div class="container-fluid">
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+          data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <i class="fa fa-bars"></i>
+        </button>
 
-      <!-- Collapsible wrapper -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <!-- Navbar brand -->
-        <a class="navbar-brand mt-2 mt-lg-0" href="#">
-          <img src="https://i.pinimg.com/474x/1e/9d/c2/1e9dc24db36c9226da76585bd0314b19.jpg" height="40" alt=""
-            loading="lazy"/>
-        </a>
-        <!-- Left links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" style="color: white" href="/dashboard">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" style="color: white" href="/library"> My Library</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/newSong">Upload New Song</a>
-          </li>
-        </ul>
-        <!-- Left links -->
-      </div>
-      <!-- Collapsible wrapper -->
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Navbar brand -->
+          <a class="navbar-brand mt-2 mt-lg-0" href="#">
+            <img src="https://i.pinimg.com/474x/1e/9d/c2/1e9dc24db36c9226da76585bd0314b19.jpg" height="40" alt=""
+              loading="lazy" />
+          </a>
+          <!-- Left links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" style="color: white" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color: white" href="/library"> My Library</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" style="color: rgb(54, 176, 233)" href="/newSong">Upload New Song</a>
+            </li>
+          </ul>
+          <!-- Left links -->
+        </div>
+        <!-- Collapsible wrapper -->
 
-      <!-- Right elements -->
-      <div class="d-flex align-items-center">
-        <form class="d-flex" style="padding-right: 5%">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" type="text"
-            class="form-control" onkeyup="dynamic_search(event)" onclick="getSongs()" id="sname" value="" />
-        </form>
-        <!-- Avatar -->
-        <a style="padding-right: 5%" class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
-          id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-          <i class="fa fa-user fa-lg"></i>
-          <!-- <img
+        <!-- Right elements -->
+        <div class="d-flex align-items-center">
+          <form class="d-flex" style="padding-right: 5%">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" type="text"
+              class="form-control" onkeyup="dynamic_search(event)" onclick="getSongs()" id="sname" value="" />
+          </form>
+          <!-- Avatar -->
+          <a style="padding-right: 5%" class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
+            id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-user fa-lg"></i>
+            <!-- <img
               src="https://mdbootstrap.com/img/new/avatars/2.jpg"
               class="rounded-circle"
               height="40"
               alt=""
               loading="lazy"
             /> -->
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-          <li>
-            <span class="dropdown-item-text" href="#"><%=name%></span>
-          </li>
-          <li>
-            <span class="dropdown-item-text" href="#"><%=email%></span>
-          </li>
-          <li>
-            <a class="dropdown-item" href="/logout">Logout</a>
-          </li>
-        </ul>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+            <li>
+              <span class="dropdown-item-text" href="#">
+                <%=name%>
+              </span>
+            </li>
+            <li>
+              <span class="dropdown-item-text" href="#">
+                <%=email%>
+              </span>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Right elements -->
       </div>
-      <!-- Right elements -->
-    </div>
-    <!-- Container wrapper -->
-  </nav>
+      <!-- Container wrapper -->
+    </nav>
 
-  <!-- Navbar -->
+    <!-- Navbar -->
 
-  
+
     <br />
 
     <div id="body">
       <div class="d-flex justify-content-center">
         <div class="col-md-6">
-        <div class="container" style="margin: 20px;margin-right: 20px;">
-          <h4 style="color:white">Upload New Song</h4>
-          <div class="row" id="pls">
-            
-            <form>
-            <div class="form-outline mb-4">
-              <input type="text" id="s_name" style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;" placeholder="Song Name" class="" required>
-            </div>
-            <div class="form-outline mb-4">
-              <input type="text" id="a_name" style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;" placeholder="Artist Name" class="" required>
-            </div>
-            <div class="form-outline mb-4">
+          <div class="container" style="margin: 20px;margin-right: 20px;">
+            <h4 style="color:white">Upload New Song</h4>
+            <div class="row" id="pls">
 
-              <input type="file" id="file1" class="text-black form-control"  style="border: 1px solid black; width:47vw; padding-left:5px; background-color: white; color: black;" required>
+              <form onsubmit="upload()">
+                <div class="form-outline mb-4">
+                  <input type="text" id="s_name"
+                    style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;"
+                    placeholder="Song Name" class="" required>
+                </div>
+                <div class="form-outline mb-4">
+                  <input type="text" id="a_name"
+                    style="border: 1px solid white; width:47vw; border-radius:3px; padding-left:5px;"
+                    placeholder="Artist Name" class="" required>
+                </div>
+                <div class="form-outline mb-4">
 
+                  <input type="file" id="file1" class="text-black form-control"
+                    style="border: 1px solid black; width:47vw; padding-left:5px; background-color: white; color: black;"
+                    required>
+
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" 
+                  style="width:47vw;">Upload</button>
+              </form>
             </div>
-              <button type="button" class="btn btn-primary btn-block" onclick="upload()" style="width:47vw;">Upload</button>
-          </form>
           </div>
         </div>
       </div>
-      </div>      
     </div><br><br>
   </div>
 </body>
+
 </html>
