@@ -1,5 +1,5 @@
 var newplsongs = [];
-var newplids = [];
+var newplis = [];
 var result = null;
 
 

@@ -250,6 +250,9 @@ function dynamic_search(event) {
       if (to_display.length) {
         temp = `<div id="carousel"><h4 style="color: white">Search Results</h4><div id="carouselExampleControls" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car">`;
       }
+      else{
+        temp = `<div id="carousel"><h4 style="color: white">No Results</h4></div`;
+      }
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
         temp += ``;
@@ -553,7 +556,6 @@ function dash() {
                     height="40"
                     alt=""
                     loading="lazy"
-                    onclick="showfooter()"
                 />
                 </a>
                 <!-- Left links -->
@@ -644,7 +646,8 @@ function dash() {
         </div>
 
         <br /><br />`;
-  document.getElementById("bg").style.height="120vh";
+  document.getElementById("bg").style.height="100vh";
+  document.getElementById("title").innerHTML="Dashboard";
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
 }
@@ -831,6 +834,7 @@ function lplaylists() {
         </div>
       </div>`;
   document.getElementById("bg").style.height="120vh";
+  document.getElementById("title").innerHTML="My Library";
   showpl();
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "library", "/library");
