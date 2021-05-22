@@ -525,13 +525,6 @@ function dash() {
   newplartists = [];
   document.getElementById("main").innerHTML = `<!-- Navbar -->
         <!-- Container wrapper -->
-        <div
-        style="
-            background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
-            height: 100%;
-        "
-        id="main"
-        >
         <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
             <div class="container-fluid">
             <!-- Toggle button -->
@@ -712,7 +705,7 @@ function lplaylists() {
           <!-- Right elements -->
             <!-- Avatar -->
             <a
-              style="padding-right: 5%"
+              style="padding-right: 0.75%"
               class="dropdown-toggle d-flex align-items-center hidden-arrow"
               href="#"
               id="navbarDropdownMenuLink"
@@ -833,7 +826,6 @@ function lplaylists() {
           <div id="carousel2"></div>
         </div>
       </div>`;
-  document.getElementById("bg").style.height="120vh";
   document.getElementById("title").innerHTML="My Library";
   showpl();
   let stateObj = { id: "100" };
