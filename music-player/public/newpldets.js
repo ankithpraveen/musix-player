@@ -18,7 +18,7 @@ function getSongs() {
 }
 
 function newplaylist(u, d) {
-  if (!document.getElementById('plname').value == "MySongs"){
+  if (!(document.getElementById('plname').value == "MySongs")){
     axios.post('/newPlaylist', {
       playlistname: document.getElementById('plname').value,
       songnames: newplsongs,

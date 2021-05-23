@@ -103,15 +103,6 @@ module.exports.uploadFile = (req, res) => {
                     if (err) {
                         console.log(err);
                     }
-                    if (result.length === 0) {
-                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MySongs", songnames: [req.body.song_name], songids: [newsongid], artistnames:[req.body.artist_name] }, function (err, res) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            console.log("1 document inserted");
-                            client.close();
-                        });
-                    }
                     else {
                         var temp1 = result[0].songnames;
                         var temp2 = result[0].songids;

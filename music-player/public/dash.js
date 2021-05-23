@@ -734,7 +734,7 @@ function dash() {
   document.getElementById("title").innerHTML = "Dashboard";
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
-  setTimeout(display_trending_songs(), 1000);
+  getSongs();
 }
 
 
