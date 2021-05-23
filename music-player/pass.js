@@ -63,8 +63,15 @@ passport.use(new GoogleStrategy({
                         if (err) {
                             console.log(err);
                         }
-                        client.close();
-                        return done(null, profile);
+                        db.collection("allplaylists").insertOne({ email: profile.emails[0].value, playlistname: 'MySongs', songnames: [], songids: [], artistnames: [] }, function (err, resl) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log("1 document inserted");
+                            client.close();
+                            return done(null, profile);
+                        });
+                        
                     });
                 }
 

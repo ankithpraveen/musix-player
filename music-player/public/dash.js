@@ -209,19 +209,104 @@ function getSongs() {
     axios.get('/getSongs').then((response) => {
       gotSongs = 1;
       songs = response.data;
-    }).then((response) => { dynamic_search({ keyCode: 8 }) });
-    getPlaylists();
+      dynamic_search({ keyCode: 8 });
+      getPlaylists();
+    });
+
   }
 }
+
 
 function getPlaylists() {
   if (!gotPlaylists) {
     axios.get('/getPlaylists').then((response) => {
       //gotPlaylists = 1;
       playlists = response.data;
+      display_trending_songs();
     });
 
   }
+}
+
+function display_trending_songs() {
+  if (gotSongs) {
+    var trend = songs.slice(songs.length - 5, songs.length);
+    var flag = 0;
+    var temp = "";
+    var sugg = document.getElementById("sugg");
+    var to_display = [];
+    for (var i = 0; i < trend.length; i++) {
+      to_display.push({ name: trend[i].filename, id: trend[i]._id, artistname: trend[i].metadata.artistname });
+    }
+    sugg.innerHTML = "";
+    if (to_display.length) {
+      temp = `<div id="carousel"><h4 style="color: white">Trending Songs</h4><div id="carouselExampleControls" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car">`;
+    }
+    else {
+      temp = `<div id="carousel"><h4 style="color: white">No songs in db lol</h4></div`;
+    }
+    for (var i = 0; i < to_display.length; i++) {
+      // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
+      temp += ``;
+      for (var j in playlists) {
+        if (playlists[j].playlistname != "MySongs") {
+          pldropdown += `<li><button class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name + `','` + to_display[i].artistname+`')">` + playlists[j].playlistname + `</button></li>`;
+        }
+      }
+      if (i % 5 == 0) {
+        var x = "";
+        if (i == 0) { x = "active"; }
+        temp += `<div class="carousel-item ` + x + ` "><div class="row"><div class="col-sm-1" style="padding-top: 1%"></div>`;
+        flag = 1;
+      }
+      temp += `<div class="col-sm-2" style="padding-top:10%">
+                <div class="card" style="background-color:transparent;">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" onclick="stopprevsong('`+ to_display[i].id + `','` + to_display[i].name + `',0);">
+                    <img src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8" class="card-img-top rounded-bottom" alt="..." />
+                    <a>
+                      <div class="mask d-flex justify-content-center align-items-center"
+                        style="background-color: rgba(0, 0, 0, 0.45);">
+                        <button class="btn btn-primary btn-floating bg-white">
+                          <i class="fa fa-play-circle fa-3x" style="color:#0f64f2"></i>
+                        </button>
+                      </div>
+                    </a>
+                  </div>
+      
+
+                  <blockquote style="padding-top:7px;padding-left:5px;margin-bottom:3px;" class="blockquote text-white">`+ to_display[i].name + `</blockquote><figcaption class="blockquote-footer" style="margin-bottom:3px;padding-top:10px;">
+                  <cite title="Source Title">`+ to_display[i].artistname + `</cite>
+                </figcaption>
+                    <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
+                    aria-expanded="false">Add to Playlist</button>
+                    <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/newpldets">New Playlist</a></li>
+                    <li>
+                    <hr class="dropdown-divider" style="margin-top:0px;margin-bottom:0px;"/>
+                    </li>`+ pldropdown + `</ul></div></div>`;
+      if (i % 5 == 4) {
+        temp += `</div></div>`;
+        flag = 0;
+      }
+      pldropdown = '';
+    }
+    if (flag) { temp += `</div></div>`; }
+    if (to_display.length) {
+      temp += `</div>
+              <button class="carousel-control-prev"  type="button"  data-mdb-target="#carouselExampleControls"  data-mdb-slide="prev" style="width:10%;padding-top:3%;">
+              <span  class="carousel-control-prev-icon"   aria-hidden="true" ></span>
+              <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleControls"   data-mdb-slide="next"  style="width:10%;padding-top:3%;" >
+              <span   class="carousel-control-next-icon"  aria-hidden="true"  ></span>
+              <span class="visually-hidden">Next</span>
+              </button>
+              </div>
+              </div>`;
+    }
+    sugg.innerHTML = temp;
+  }
+
 }
 
 function dynamic_search(event) {
@@ -236,6 +321,7 @@ function dynamic_search(event) {
       var slength = search_text.length;
       if (!slength) {
         sugg.innerHTML = ""
+        display_trending_songs();
         return null;
       }
       search_text = search_text.toLowerCase();
@@ -245,20 +331,19 @@ function dynamic_search(event) {
           to_display.push({ name: songs[i].filename, id: songs[i]._id, artistname: songs[i].metadata.artistname });
         }
       }
-      console.log(to_display);
       sugg.innerHTML = "";
       if (to_display.length) {
         temp = `<div id="carousel"><h4 style="color: white">Search Results</h4><div id="carouselExampleControls" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car">`;
       }
-      else{
+      else {
         temp = `<div id="carousel"><h4 style="color: white">No Results</h4></div`;
       }
       for (var i = 0; i < to_display.length; i++) {
         // sugg.innerHTML = sugg.innerHTML+"<br>"+`<button onclick = "play('`+to_display[i].id+`')" class="btn btn-primary">`+to_display[i].name+`</button><br>`;
         temp += ``;
         for (var j in playlists) {
-          if (playlists[j].playlistname != "MyUploadedSongs") {
-            pldropdown += `<li><button class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name + `')">` + playlists[j].playlistname + `</button></li>`;
+          if (playlists[j].playlistname != "MySongs") {
+            pldropdown += `<li><button class="dropdown-item" onclick="addtopl('` + playlists[j]._id + `','` + to_display[i].id + `','` + to_display[i].name + `','` + to_display[i].artistname+`')">` + playlists[j].playlistname + `</button></li>`;
           }
         }
         if (i % 5 == 0) {
@@ -288,7 +373,7 @@ function dynamic_search(event) {
                     <button class="text-info d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                     aria-expanded="false">Add to Playlist</button>
                     <ul class="dropdown-menu">
-                    <li><button class="dropdown-item" href="/newpldets">New Playlist</button></li>
+                    <li><a class="dropdown-item" href="/newpldets">New Playlist</a></li>
                     <li>
                     <hr class="dropdown-divider" style="margin-top:0px;margin-bottom:0px;"/>
                     </li>`+ pldropdown + `</ul></div></div>`;
@@ -358,7 +443,7 @@ function showpl() {
                 </div>
 
                 <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">`+ response.data[i].playlistname + `</h5>`;
-        if (response.data[i].playlistname != "MyUploadedSongs") {
+        if (response.data[i].playlistname != "MySongs") {
           plshtml += `<button class="text-danger d-flex justify-content-start" style="font-size:15px;background-color:transparent;border:0px;padding-left:5px;" data-mdb-toggle="dropdown"
                 aria-expanded="false" id="delpl">Delete</button>
                 <ul class="dropdown-menu" aris-labeled-by="delpl">
@@ -430,12 +515,13 @@ function showpl() {
 //     }
 // }
 
-function newplaylist(u, d, plid, sid, sname, sdelete) {
+function newplaylist(u, d, plid, sid, sname,aname,sdelete) {
   axios.post('/newPlaylist', {
     //playlistname: document.getElementById('plname').value,
     playlistid: plid,
     songname: sname,
     songid: sid,
+    artistname: aname,
     update: u,
     delete: d,
     sdel: sdelete
@@ -464,6 +550,11 @@ function showplsongs(plid) {
       newplsongs = result[i].songnames;
       newplids = result[i].songids;
       newplartists = result[i].artistnames;
+      if (!result[i].songnames.length) {
+        alert("No songs added yet");
+        document.getElementById("container").innerHTML += `<div id="carousel2"></div>`;
+        return null;
+      }
       inner += `<div id="carousel2"><h4 style="color: white">Songs in ` + result[i].playlistname + `</h4><div id="carouselExampleControls2" class="carousel slide" data-mdb-ride="carousel"><div class="carousel-inner" id="car2">`;
       for (var j = 0; j < result[i].songnames.length; j++) {
         if (j % 3 == 0) {
@@ -616,10 +707,10 @@ function dash() {
                 aria-labelledby="navbarDropdownMenuLink"
                 >
                 <li>
-                <span class="dropdown-item-text" href="#">`+document.getElementById("name").innerHTML+`</span>
+                <span class="dropdown-item-text" href="#">`+ document.getElementById("name").innerHTML + `</span>
               </li>
               <li>
-                <span class="dropdown-item-text" href="#">`+document.getElementById("email").innerHTML+`</span>
+                <span class="dropdown-item-text" href="#">`+ document.getElementById("email").innerHTML + `</span>
               </li>
                 <li>
                     <a class="dropdown-item" href="/logout">Logout</a>
@@ -639,10 +730,11 @@ function dash() {
         </div>
 
         <br /><br />`;
-  document.getElementById("bg").style.height="100vh";
-  document.getElementById("title").innerHTML="Dashboard";
+  document.getElementById("bg").style.height = "100vh";
+  document.getElementById("title").innerHTML = "Dashboard";
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
+  setTimeout(display_trending_songs(), 1000);
 }
 
 
@@ -727,10 +819,10 @@ function lplaylists() {
               aria-labelledby="navbarDropdownMenuLink"
             >
             <li>
-            <span class="dropdown-item-text" href="#">`+document.getElementById("name").innerHTML+`</span>
+            <span class="dropdown-item-text" href="#">`+ document.getElementById("name").innerHTML + `</span>
           </li>
           <li>
-            <span class="dropdown-item-text" href="#">`+document.getElementById("email").innerHTML+`</span>
+            <span class="dropdown-item-text" href="#">`+ document.getElementById("email").innerHTML + `</span>
           </li>
               <li>
                 <a class="dropdown-item" href="/logout">Logout</a>
@@ -826,23 +918,23 @@ function lplaylists() {
           <div id="carousel2"></div>
         </div>
       </div>`;
-  document.getElementById("title").innerHTML="My Library";
+  document.getElementById("title").innerHTML = "My Library";
   showpl();
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "library", "/library");
 }
 
 function removefrompl(plid, songid) {
-  var sidind = newplids.indexOf(songid.toString());
-  newplaylist(1, 0, plid, songid.toString(), newplsongs[sidind], 1);
-  console.log("removing");
+  newplaylist(1, 0, plid, songid.toString(), "","", 1);
+  alert("Song removed!");
 }
 
-function addtopl(plid, songid, songname) {
-  newplaylist(1, 0, plid, songid.toString(), songname, 0);
-  console.log("adding to pl");
+function addtopl(plid, songid, songname, aname) {
+  newplaylist(1, 0, plid, songid.toString(), songname,aname, 0);
+  alert("Song added!");
 }
 
 function removepl(plid) {
-  newplaylist(0, 1, plid, '', '', 1);
+  newplaylist(0, 1, plid, '', '','', 1);
+  alert("Playlist deleted!");
 }

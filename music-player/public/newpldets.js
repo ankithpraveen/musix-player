@@ -4,9 +4,6 @@ var newplartists = [];
 var tsugg = [];
 var tadded = [];
 
-function newpl() {
-  console.log("making new playlist");
-}
 
 var gotSongs = 0;
 var songs = null;
@@ -21,19 +18,24 @@ function getSongs() {
 }
 
 function newplaylist(u, d) {
-  axios.post('/newPlaylist', {
-    playlistname: document.getElementById('plname').value,
-    songnames: newplsongs,
-    songids: newplids,
-    artistnames:newplartists,
-    update: u,
-    delete: d
-  }, { withCredentials: true })
-    .then(function (response) {
-    })
-  newplsongs = [];
-  newplids = [];
-  newplartists = [];
+  if (!document.getElementById('plname').value == "MySongs"){
+    axios.post('/newPlaylist', {
+      playlistname: document.getElementById('plname').value,
+      songnames: newplsongs,
+      songids: newplids,
+      artistnames:newplartists,
+      update: u,
+      delete: d
+    }, { withCredentials: true })
+      .then(function (response) {
+      })
+    newplsongs = [];
+    newplids = [];
+    newplartists = [];
+  }
+  else{
+    alert("Bruh");
+  }
 }
 
 

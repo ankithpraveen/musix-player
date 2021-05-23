@@ -9,7 +9,7 @@
   />
   <script src="dash.js"></script>
   <head><title id="title">Dashboard</title></head>
-  <body id="bg">
+  <body id="bg" onload="getSongs()">
     <!-- Navbar -->
     <!-- Container wrapper -->
     <div
@@ -87,7 +87,6 @@
                 type="text"
                 class="form-control"
                 onkeyup="dynamic_search(event)"
-                onclick="getSongs()"
                 id="sname"
                 value=""
               />
@@ -134,7 +133,9 @@
       <!-- Navbar -->
 
       <div class="container">
-        <div class="row" id="sugg"></div>
+        <div class="row" id="sugg">
+          
+        </div>
       </div>
 
       <br /><br />

@@ -99,12 +99,12 @@ module.exports.uploadFile = (req, res) => {
                     console.log(err);
                 }
                 const db = client.db(dbName);
-                db.collection("allplaylists").find({ email: req.user.email, playlistname: "MyUploadedSongs" }).toArray(function (err, result) {
+                db.collection("allplaylists").find({ email: req.user.email, playlistname: "MySongs" }).toArray(function (err, result) {
                     if (err) {
                         console.log(err);
                     }
                     if (result.length === 0) {
-                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MyUploadedSongs", songnames: [req.body.song_name], songids: [newsongid], artistnames:[req.body.artist_name] }, function (err, res) {
+                        db.collection("allplaylists").insertOne({ email: req.user.email, playlistname: "MySongs", songnames: [req.body.song_name], songids: [newsongid], artistnames:[req.body.artist_name] }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -119,7 +119,7 @@ module.exports.uploadFile = (req, res) => {
                         temp1.push(req.body.song_name);
                         temp2.push(newsongid);
                         temp3.push(req.body.artist_name);
-                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MyUploadedSongs" }, { $set: { songnames: temp1, songids: temp2 , artistnames: temp3} }, function (err, res) {
+                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MySongs" }, { $set: { songnames: temp1, songids: temp2 , artistnames: temp3} }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -222,7 +222,7 @@ module.exports.getUploadedSongs = (req, res) => {
             console.log(err);
         }
         const db = client.db(dbName);
-        db.collection("allplaylists").find({ email: req.user.email, playlistname: "MyUploadedSongs" }).toArray(function (err, result) {
+        db.collection("allplaylists").find({ email: req.user.email, playlistname: "MySongs" }).toArray(function (err, result) {
             if (err) {
                 console.log(err);
             }
