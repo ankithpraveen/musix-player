@@ -87,12 +87,14 @@ module.exports.uploadFile = (req, res) => {
         res.send("GTFO");
         return null;
     }
-
+    console.log('in');
     upload(req, res, (err) => {
         if (err) {
             console.log(err);
+            console.log(10);
         }
         else {
+            console.log("DOnE?");
             var newsongid = req.file.id.toString();
             MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
                 if (err) {
@@ -121,7 +123,6 @@ module.exports.uploadFile = (req, res) => {
 
                 });
             });
-            console.log("DOnE?");
         }
     });
 };

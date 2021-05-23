@@ -1,7 +1,7 @@
 function upload() {
     var formData = new FormData();
     var song = document.querySelector('#file1');
-    if (song.files[0].size / 1048576 < 7) {
+    if (song.files[0].size / 1048576 < 10) {
         formData.append("song_name", document.getElementById('s_name').value);
         formData.append("artist_name", document.getElementById('a_name').value);
         formData.append("song", song.files[0]);
@@ -13,6 +13,7 @@ function upload() {
             }
         })
             .then((response) => {
+                alert('Upload success boss');
                 console.log(response);
             }, (error) => {
                 console.log(error);

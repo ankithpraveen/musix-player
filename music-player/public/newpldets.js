@@ -28,6 +28,7 @@ function newplaylist(u, d) {
       delete: d
     }, { withCredentials: true })
       .then(function (response) {
+        alert("Created!");
       })
     newplsongs = [];
     newplids = [];

@@ -230,7 +230,7 @@ function getPlaylists() {
 
 function display_trending_songs() {
   if (gotSongs) {
-    var trend = songs.slice(songs.length - 5, songs.length);
+    var trend = songs.slice(songs.length - 10, songs.length);
     var flag = 0;
     var temp = "";
     var sugg = document.getElementById("sugg");
