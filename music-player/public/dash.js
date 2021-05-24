@@ -606,6 +606,7 @@ function showplsongs(plid) {
             </div>
             </div>`;
       document.getElementById("container").innerHTML += inner;
+      document.getElementById("main").setAttribute("style","background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: cover;padding-bottom:30vh;");
       break;
     }
   }
@@ -733,6 +734,7 @@ function dash() {
         <br /><br />`;
   document.getElementById("bg").style.height = "100vh";
   document.getElementById("title").innerHTML = "Dashboard";
+  document.getElementById("main").setAttribute("style","background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
   let stateObj = { id: "100" };
   gotSongs=0;
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
@@ -921,6 +923,7 @@ function lplaylists() {
         </div>
       </div>`;
   document.getElementById("title").innerHTML = "My Library";
+  document.getElementById("main").setAttribute("style","background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
   showpl();
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "library", "/library");
