@@ -231,6 +231,7 @@ function getPlaylists() {
 function display_trending_songs() {
   if (gotSongs) {
     var trend = songs.slice(songs.length - 10, songs.length);
+    trend = trend.reverse();
     var flag = 0;
     var temp = "";
     var sugg = document.getElementById("sugg");
@@ -733,6 +734,7 @@ function dash() {
   document.getElementById("bg").style.height = "100vh";
   document.getElementById("title").innerHTML = "Dashboard";
   let stateObj = { id: "100" };
+  gotSongs=0;
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
   getSongs();
 }
