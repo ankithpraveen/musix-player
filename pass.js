@@ -41,7 +41,8 @@ const GOOGLE_CLIENT_SECRET = 'oBWYZyB5qe8NjIv39ECYFdgJ';
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback"
+    callbackURL: "https://algo-rythm.herokuapp.com/auth/google/callback",
+    proxy: true
 },
     function (accessToken, refreshToken, profile, done) {
         //Save user in db if needed
