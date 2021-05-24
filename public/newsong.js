@@ -29,6 +29,6 @@ function upload() {
         }
     }
     else{
-        alert("Only mp3 or wav files are supported");
+        alert("Only mp3, m4a or wav files are supported");
     }
 }
