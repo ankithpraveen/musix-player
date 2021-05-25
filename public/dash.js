@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }, false);
   seekControl1.addEventListener('mouseup', function () {
     seek(this.value);
+    seekstart=0;
   }, false);
 
 
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isPlaying) {
       playbackTime = (Date.now() - startedAt) / 1000;
       rate = parseInt((playbackTime * 100) / duration, 10);
-      seekControl1.value = rate / 100;
+      seekControl1.value = Math.round((((playbackTime * 100) / duration) / 100 + Number.EPSILON) * 1000) / 1000;
       if (rate > 100) {
         if (!queue == 0) {
           if (currentindex < queue[2]) {
@@ -169,7 +170,7 @@ function stopprevsong(id, name, news) {
 }
 
 function resume() {
-  // source1.start();
+  //source1.start();
   startedAt = Date.now() - pausedAt;
   source1 = audioContext.createBufferSource();
   source1.buffer = abuff;
@@ -187,6 +188,7 @@ function stop() {
 
 function seek(val) {
   if (isPlaying) {
+    source1.stop();
     source1 = audioContext.createBufferSource();
     source1.buffer = abuff;
     source1.connect(gainNode1).connect(audioContext.destination);

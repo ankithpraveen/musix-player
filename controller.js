@@ -18,7 +18,7 @@ let storage = new GridFsStorage({
             //Setting collection name, default name is fs      
             filename: req.body.song_name,
             //Setting file name to original name of file 
-            metadata: {artistname:req.body.artist_name  }
+            metadata: { artistname: req.body.artist_name }
         }
     }
 });
@@ -32,11 +32,32 @@ storage.on('connection', (db) => {
     }).single('song');
 });
 
-
+module.exports.getLim = (req, res) => {
+    if (req.user) {
+        MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
+            if (err) {
+                console.log(err);
+            }
+            const db = client.db(dbName);
+            db.collection("allplaylists").find({ email: req.user.email, playlistname: "MySongs" }).toArray(function (err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    res.send(5-result[0].songids.length);
+                    client.close();
+                }
+            });
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+};
 
 module.exports.loadnewSong = (req, res) => {
     if (req.user) {
-        res.render('newsong', { email: req.user.email , name:req.user.name});
+        res.render('newsong', { email: req.user.email, name: req.user.name });
     }
     else {
         res.redirect('/');
@@ -46,7 +67,7 @@ module.exports.loadnewSong = (req, res) => {
 
 module.exports.loadLibrary = (req, res) => {
     if (req.user) {
-        res.render('library', { email: req.user.email , name:req.user.name});
+        res.render('library', { email: req.user.email, name: req.user.name });
     }
     else {
         res.redirect('/');
@@ -56,7 +77,7 @@ module.exports.loadLibrary = (req, res) => {
 
 module.exports.loadDash = (req, res) => {
     if (req.user) {
-        res.render('dash', { email: req.user.email , name:req.user.name});
+        res.render('dash', { email: req.user.email, name: req.user.name });
     }
     else {
         res.redirect('/');
@@ -112,7 +133,7 @@ module.exports.uploadFile = (req, res) => {
                         temp1.push(req.body.song_name);
                         temp2.push(newsongid);
                         temp3.push(req.body.artist_name);
-                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MySongs" }, { $set: { songnames: temp1, songids: temp2 , artistnames: temp3} }, function (err, res) {
+                        db.collection("allplaylists").updateOne({ email: req.user.email, playlistname: "MySongs" }, { $set: { songnames: temp1, songids: temp2, artistnames: temp3 } }, function (err, res) {
                             if (err) {
                                 console.log(err);
                             }
@@ -227,7 +248,7 @@ module.exports.getUploadedSongs = (req, res) => {
 module.exports.loaduploadedsongs = (req, res) => {
 
     if (req.user) {
-        res.render('newsong', { email: req.user.email , name:req.user.name});
+        res.render('newsong', { email: req.user.email, name: req.user.name });
     }
     else {
         res.redirect('/');
@@ -254,12 +275,12 @@ module.exports.addNewPlaylist = (req, res) => {
                     y.splice(sidind, 1);
                     z.splice(sidind, 1);
                 }
-                else{
+                else {
                     x.push(req.body.songname);
                     y.push(req.body.songid);
                     z.push(req.body.artistname);
                 }
-                db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: x, songids:y, artistnames: z } }, function (err, resl) {
+                db.collection("allplaylists").updateOne({ email: req.user.email, _id: ObjectId(req.body.playlistid) }, { $set: { songnames: x, songids: y, artistnames: z } }, function (err, resl) {
                     if (err) {
                         console.log(err);
                     }
@@ -294,7 +315,7 @@ module.exports.addNewPlaylist = (req, res) => {
 
 module.exports.loadnewpldets = (req, res) => {
     if (req.user) {
-        res.render('newpldets', { email: req.user.email , name:req.user.name});
+        res.render('newpldets', { email: req.user.email, name: req.user.name });
     }
     else {
         res.redirect('/');

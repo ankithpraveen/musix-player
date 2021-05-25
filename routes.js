@@ -9,6 +9,7 @@ module.exports.paths = app => {
     app.get('/newpldets',controller.loadnewpldets)
     
     app.get('/getPlaylists',controller.getPlaylists);
+    app.get('/getLim', controller.getLim);
     app.get('/getSongs', controller.getSongs);
     app.get('/getPlaylists', controller.getPlaylists);
     app.get('/getUploadedSongs', controller.getUploadedSongs);
