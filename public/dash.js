@@ -206,6 +206,11 @@ var songs = null;
 var playlists = null;
 function getSongs() {
   if (!gotSongs) {
+    var sugg = document.getElementById("sugg");
+    sugg.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-white" role="status">
+    </div>
+  </div>`;
     axios.get('/getSongs').then((response) => {
       gotSongs = 1;
       songs = response.data;
@@ -217,8 +222,13 @@ function getSongs() {
 }
 
 
-function getPlaylists() {
+function getPlaylists() {  
   if (!gotPlaylists) {
+    var sugg = document.getElementById("sugg");
+    sugg.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-white" role="status">
+    </div>
+  </div>`;
     axios.get('/getPlaylists').then((response) => {
       //gotPlaylists = 1;
       playlists = response.data;
@@ -230,11 +240,11 @@ function getPlaylists() {
 
 function display_trending_songs() {
   if (gotSongs) {
+    var sugg = document.getElementById("sugg");
     var trend = songs.slice(songs.length - 10, songs.length);
     trend = trend.reverse();
     var flag = 0;
     var temp = "";
-    var sugg = document.getElementById("sugg");
     var to_display = [];
     for (var i = 0; i < trend.length; i++) {
       to_display.push({ name: trend[i].filename, id: trend[i]._id, artistname: trend[i].metadata.artistname });
@@ -421,9 +431,39 @@ function playpauseswitch() {
 
 
 function showpl() {
+  var pls = document.getElementById("pls0");
+  pls.innerHTML = `<div class="d-flex justify-content-center" id="plspinner">
+  <div class="spinner-border text-white" role="status">
+    <span class="visually-hidden"></span>
+  </div>
+</div>`;
   axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
     result = response.data;
-    var plshtml = "";
+    var plshtml = `<div class="col-sm-3" style="padding-top: 1%"></div>
+    <div class="col-sm-2" style="padding-top: 1%">
+      <div class="card" style="background-color:transparent;">
+        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+          <img
+            src="https://i.picsum.photos/id/693/200/150.jpg?grayscale&hmac=QDXoEU04DyaG7M8c842-qtEs0m1MCM9_XyYNS8BLcB8"
+            class="card-img-top rounded-bottom" alt="..." />
+          <a href="/newpldets">
+            <div class="
+                    mask
+                    d-flex
+                    justify-content-center
+                    align-items-center
+                  " style="background-color: rgba(0, 0, 0, 0.45)">
+              <button class="btn btn-primary btn-floating bg-white">
+                <i class="fa fa-plus-circle fa-3x" style="color: #0f64f2"></i>
+              </button>
+            </div>
+          </a>
+        </div>
+
+        <h5 class="card-title text-white" style="padding-top:10px;padding-left:5px;">New Playlist</h5>
+
+      </div>
+    </div>`;
     var flag = 1;
     for (var i in response.data) {
       if (i < 2) {
@@ -498,6 +538,7 @@ function showpl() {
       plshtml += `</div></div>`;
       document.getElementById("car").innerHTML += plshtml;
     }
+    (document.getElementById("plspinner")).parentElement.removeChild(document.getElementById("plspinner"));
 
 
 
