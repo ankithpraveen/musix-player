@@ -1,13 +1,12 @@
-const { default: axios } = require("axios");
 
 var lim = 0;
 function getlim() {
-    axios.get('/getLim', { withCredentials: true }).then((response) => { lim = response.data[0] });
+    axios.get('/getLim', { withCredentials: true }).then((response) => {  lim = parseInt(response.data,10); });
 }
 
 
 function upload() {
-    if (lim) {
+    if (lim>0) {
         var formData = new FormData();
         var song = document.querySelector('#file1');
         var extension = (song.files[0].name).substring((song.files[0].name).lastIndexOf('.') + 1);
@@ -16,7 +15,6 @@ function upload() {
                 formData.append("song_name", document.getElementById('s_name').value);
                 formData.append("artist_name", document.getElementById('a_name').value);
                 formData.append("song", song.files[0]);
-                console.log(formData);
                 axios.post('/uploadSong', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',

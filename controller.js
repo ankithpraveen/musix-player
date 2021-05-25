@@ -44,7 +44,8 @@ module.exports.getLim = (req, res) => {
                     console.log(err);
                 }
                 else {
-                    res.send(5-result[0].songids.length);
+                    res.send((5-result[0].songids.length).toString());
+                    console.log(result[0].songids.length);
                     client.close();
                 }
             });
@@ -108,7 +109,6 @@ module.exports.uploadFile = (req, res) => {
         res.send("GTFO");
         return null;
     }
-    console.log('in');
     upload(req, res, (err) => {
         if (err) {
             console.log(err);
