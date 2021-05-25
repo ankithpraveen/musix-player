@@ -6,7 +6,7 @@ var result = null;
 function showpl() {
     axios.get('/getPlaylists', { withCredentials: true }).then((response) => {
         result = response.data;
-        var plshtml = "";
+        var plshtml = ``;
         for (var i in response.data) {
             if (i < 2) {
                 var pls = document.getElementById("pls0");
