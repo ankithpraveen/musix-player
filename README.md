@@ -4,6 +4,8 @@
 ### This project is a basic music player
 Link to the website: [Algo-Rhythm](algo-rhythm.herokuapp.com)
 
+## Dashboard
+
 ##### Search for and listen to songs uploaded by others
 ![Dashboard](/images/dash.png)
 
