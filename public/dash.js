@@ -27,6 +27,15 @@ var newplids = 0;
 var result = null;
 var pldropdown = '';
 
+function respscroll(){
+  if (window.innerWidth<575){
+    document.getElementById("main").setAttribute("style","background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: cover;");
+  }
+  else{
+    document.getElementById("main").setAttribute("style","background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   dur = document.getElementById("duration");
   const volumeControl1 = document.querySelector('#volume1');
