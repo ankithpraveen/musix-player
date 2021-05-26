@@ -5,7 +5,7 @@
 Link to the website: [Algo-Rhythm](algo-rhythm.herokuapp.com)
 
 ##### Search for and listen to songs uploaded by others
-![Dashboard](/images/dash.png){:width="50%"}
+![Dashboard](/images/dash.png)
 
 ## Library
 
