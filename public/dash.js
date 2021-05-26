@@ -29,7 +29,7 @@ var pldropdown = '';
 
 function respscroll() {
   if (window.innerWidth < 575) {
-    document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: cover;");
+    document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: cover; min-height:100vh;padding-bottom:30vh");
   }
   else {
     document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
@@ -181,7 +181,7 @@ function stopprevsong(id, name, news) {
       play(id, name);
     }
   }
-  else{
+  else {
     alert("Please wait for previous song to load");
   }
 }
@@ -666,7 +666,7 @@ function showplsongs(plid) {
             </div>
             </div>`;
       document.getElementById("container").innerHTML += inner;
-      document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: cover;padding-bottom:30vh;");
+      document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: cover;padding-bottom:30vh; min-height:100vh");
       break;
     }
   }
@@ -787,6 +787,7 @@ function dash() {
   document.getElementById("bg").style.height = "100vh";
   document.getElementById("title").innerHTML = "Dashboard";
   document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
+  respscroll();
   let stateObj = { id: "100" };
   gotSongs = 0;
   window.history.replaceState(stateObj, "dashboard", "/dashboard");
@@ -969,6 +970,7 @@ function lplaylists() {
   document.getElementById("title").innerHTML = "My Library";
   document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
   showpl();
+  respscroll();
   let stateObj = { id: "100" };
   window.history.replaceState(stateObj, "library", "/library");
 }

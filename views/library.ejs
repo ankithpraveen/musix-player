@@ -6,13 +6,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <script src="dash.js"></script>
 <head><title id="title">Algo-Rhythm</title></head>
-<body onload="showpl()" id="bg">
+<body onload="showpl();respscroll();" onresize="respscroll()" id="bg">
   <!-- Navbar -->
   <!-- Container wrapper -->
-  <div class="bg-image" style="
-        background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));
-        height: 100vh;
-      " id="main">
+  <div class="bg-image" id="main">
     <!-- Navbar -->
     <!-- Container wrapper -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
