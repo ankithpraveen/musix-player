@@ -785,7 +785,6 @@ function dash() {
 
         <br /><br />`;
   document.getElementById("bg").style.height = "100vh";
-  document.getElementById("title").innerHTML = "Dashboard";
   document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
   respscroll();
   let stateObj = { id: "100" };
@@ -967,7 +966,6 @@ function lplaylists() {
           <div id="carousel2"></div>
         </div>
       </div>`;
-  document.getElementById("title").innerHTML = "My Library";
   document.getElementById("main").setAttribute("style", "background-image: linear-gradient(rgb(0, 0, 0), rgb(37, 37, 37));height: 100vh;");
   showpl();
   respscroll();
