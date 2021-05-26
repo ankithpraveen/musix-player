@@ -44,7 +44,7 @@ module.exports.getLim = (req, res) => {
                     console.log(err);
                 }
                 else {
-                    res.send((5-result[0].songids.length).toString());
+                    res.send((5 - result[0].songids.length).toString());
                     console.log(result[0].songids.length);
                     client.close();
                 }
@@ -143,7 +143,9 @@ module.exports.uploadFile = (req, res) => {
                     }
 
                 });
+
             });
+            res.send(newsongid);
         }
     });
 };
