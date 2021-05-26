@@ -5,7 +5,7 @@
 ### This project is a basic music player
 Link to the website: [Algo-Rhythm](algo-rhythm.herokuapp.com)
 
-<img src="/images/dash.jpg" alt="Dashboard" width="200"/>
+![Dashboard](/images/dash.png | width=100)
 
 ## Create and manage playlists
 ---
