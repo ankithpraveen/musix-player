@@ -10,7 +10,6 @@ function upload() {
         var formData = new FormData();
         var song = document.querySelector('#file1');
         var extension = (song.files[0].name).substring((song.files[0].name).lastIndexOf('.') + 1);
-        console.log(!((document.getElementById('s_name').value).includes("'")));
         if (!((document.getElementById('s_name').value).includes("'"))){
             if (extension == "mp3" || extension == "wav" || extension == "m4a") {
                 if (song.files[0].size / 1048576 < 10) {
