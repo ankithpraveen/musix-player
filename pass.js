@@ -41,7 +41,7 @@ const GOOGLE_CLIENT_SECRET = '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';
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://algo-rhythm.herokuapp.com/auth/google/callback",
+    callbackURL: "http://algo-rhythm-music-player.herokuapp.com/auth/google/callback",
     proxy: true
 },
     function (accessToken, refreshToken, profile, done) {
