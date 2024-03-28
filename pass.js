@@ -1,4 +1,6 @@
 /*  PASSPORT SETUP  */
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "./secret.js";
+
 
 const passport = require('passport');
 passport.serializeUser(function (user, cb) {
@@ -36,8 +38,7 @@ passport.deserializeUser(function (emailid, cb) {
 
 /*  Google AUTH  */
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const GOOGLE_CLIENT_ID = '403835168725-gsctp5nc7oe032raj3meuip0l013h5cs.apps.googleusercontent.com';
-const GOOGLE_CLIENT_SECRET = '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';
+
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
