@@ -1,5 +1,5 @@
 /*  PASSPORT SETUP  */
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "./secret.js";
+const secret = require("./secret");
 
 
 const passport = require('passport');
@@ -40,8 +40,8 @@ passport.deserializeUser(function (emailid, cb) {
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 passport.use(new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
+    clientID: secret.GOOGLE_CLIENT_ID,
+    clientSecret: secret.GOOGLE_CLIENT_SECRET,
     callbackURL: "http://algo-rhythm.onrender.com/auth/google/callback",
     proxy: true
 },
