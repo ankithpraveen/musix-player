@@ -17,7 +17,7 @@ passport.deserializeUser(function (emailid, cb) {
         }
         const db = client.db(dbName);
         // inserting user profile in db 
-        
+
         db.collection("profiles").findOne({ email: emailid }, function (err, res) {
             if (err) {
                 console.log(err);
@@ -41,7 +41,7 @@ const GOOGLE_CLIENT_SECRET = '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';
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://algo-rhythm-music-player.herokuapp.com/auth/google/callback",
+    callbackURL: "http://algo-rhythm.onrender.com/auth/google/callback",
     proxy: true
 },
     function (accessToken, refreshToken, profile, done) {
@@ -72,7 +72,7 @@ passport.use(new GoogleStrategy({
                             client.close();
                             return done(null, profile);
                         });
-                        
+
                     });
                 }
 
