@@ -42,7 +42,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(new GoogleStrategy({
     clientID: secret.GOOGLE_CLIENT_ID,
     clientSecret: secret.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://algo-rhythm.onrender.com/auth/google/callback",
+    callbackURL: "https://algo-rhythm.onrender.com/auth/google/callback",
     proxy: true
 },
     function (accessToken, refreshToken, profile, done) {
